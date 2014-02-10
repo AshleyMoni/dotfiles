@@ -79,9 +79,9 @@
 
 (require 'tramp)
 
-;; Add line numbers to programming buffers
+;; Add line numbers to all buffers
 
-(add-hook 'prog-mode-hook 'linum-mode)
+(global-linum-mode 1)
 
 ;; Registers!
 
@@ -100,8 +100,8 @@
 
 (global-set-key (kbd "C-0") 'delete-window)
 (global-set-key (kbd "C-1") 'delete-other-windows)
-(global-set-key (kbd "C-2") 'split-window-below)
-(global-set-key (kbd "C-3") 'split-window-right)
+(global-set-key (kbd "C-2") 'split-window-verically)
+(global-set-key (kbd "C-3") 'split-window-horizontally)
 (global-set-key (kbd "C-4") ctl-x-4-map)
 (global-set-key (kbd "C-5") ctl-x-5-map)
 (global-set-key (kbd "C-6") '2C-command)
