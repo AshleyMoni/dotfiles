@@ -1,0 +1,30 @@
+map J :tabnext<CR>
+map K :tabprevious<CR>
+
+map h <Left>
+map j <Down>
+map k <Up>
+map l <Right>
+
+nmap d <C-w>
+
+" set editor=emacsclient -c
+" set hinttimeout=500
+" set titlestring=Namorokron
+
+set cpt=l
+set defsearch=g
+
+set hintchars="abcdefghijklmnopqrstuvwxyz"
+
+
+highlight Hint::after -append font-size: 10pt
+
+" nmap s :noscript toggletemp<CR>
+" vmap s :noscript toggletemp<CR>
+" 
+" nmap S :noscript toggleperm<CR>
+" vmap S :noscript toggleperm<CR>
+
+" let g:smooziee_scroll_amount="100"
+" let g:smooziee_scroll_interval="20"

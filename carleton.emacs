@@ -100,7 +100,7 @@
 
 (global-set-key (kbd "C-0") 'delete-window)
 (global-set-key (kbd "C-1") 'delete-other-windows)
-(global-set-key (kbd "C-2") 'split-window-verically)
+(global-set-key (kbd "C-2") 'split-window-vertically)
 (global-set-key (kbd "C-3") 'split-window-horizontally)
 (global-set-key (kbd "C-4") ctl-x-4-map)
 (global-set-key (kbd "C-5") ctl-x-5-map)

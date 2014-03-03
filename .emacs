@@ -84,7 +84,7 @@
 (require 'tramp)
 
 (require 'package)
-(add-to-list 'package-archives 
+(add-to-list 'package-archives
     '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 ;; Structured-Haskell-Mode
@@ -138,9 +138,9 @@
 ;; (global-set-key "\C-z" 'vip-change-mode-to-vi)
 
 ;; ; (backward-char) C-b <- C-h is the help map (help-command)
-;; ; (next-line) C-n <- C-j is (newline-and-indent)
+;; ; (next-line) C-n     <- C-j is (newline-and-indent)
 ;; ; (previous-line) C-p <- C-k is (kill-line)
-;; ; (forward-char) C-f <- C-l is (recenter-top-bottom)
+;; ; (forward-char) C-f  <- C-l is (recenter-top-bottom)
 
 ;; (global-set-key "\C-b" 'help-command)
 ;; (global-set-key "\C-n" 'newline-and-indent)

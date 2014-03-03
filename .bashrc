@@ -109,4 +109,4 @@ alias saga='sudo apt-get autoremove'
 export TERM="xterm-256color"
 export EDITOR='emacsclient -c'
 
-alias untar-gz='tar -zxf'
+alias untar='tar -xf'
