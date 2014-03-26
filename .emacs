@@ -1,8 +1,7 @@
-;; Start the emacs server and save everything
+;; start the emacs server and save everything
 
 (desktop-save-mode)
 (server-start)
-
 
 ;; clean *scratch*, no more startup screen
 
@@ -52,12 +51,16 @@
 
 ;; activate transient-mark-mode and delete-selection-mode
 
-(transient-mark-mode t)
+;; (transient-mark-mode t) ; Enabled by default within GNU Emacs 23.1 onwards
 (delete-selection-mode)
 
-;; Undo-tree mode, make it global
+;; Undo-tree mode, make it global, diminish it from modelines.
 
-(add-to-list 'after-init-hook 'global-undo-tree-mode)
+(package-initialize)
+(global-undo-tree-mode)
+(diminish 'undo-tree-mode)
+;; (add-to-list 'after-init-hook 'global-undo-tree-mode)
+;; (add-to-list 'after-init-hook '(diminish 'undo-tree-mode))
 
 ;; Scrolling
 
@@ -89,11 +92,11 @@
 
 ;; Structured-Haskell-Mode
 
-(add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
-(setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
-(require 'shm)
+;; (add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
+;; (setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
+;; (require 'shm)
 
-(add-hook 'haskell-mode-hook 'structured-haskell-mode)
+;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
 ;; Add line numbers to programming buffers
 
@@ -105,6 +108,11 @@
 (set-register ?m '(file . "~/.xmonad/xmonad.hs"))
 (set-register ?b '(file . "~/.bashrc"))
 (set-register ?c '(file . "~/.conkyrc"))
+(set-register ?v '(file . "~/.vimperatorrc"))
+(set-register ?z '(file . "~/.zshrc"))
+(set-register ?i '(file . "~/.xinitrc"))
+(set-register ?d '(file . "~/.Xdefaults"))
+
 
 ;; Set automode-alist for scheme and prolog mode
 
