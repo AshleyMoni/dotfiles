@@ -16,7 +16,7 @@ import XMonad.StackSet (view, currentTag, focusUp, focusDown)
 import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Hooks.InsertPosition (insertPosition, Position(End), Focus(Newer))
--------------------------------------------------- Xmobar / Dzen
+-------------------------------------------------- Xmobar
 import XMonad.Hooks.ManageDocks (avoidStruts)
 -------------------------------------------------- Utilities
 import XMonad.Util.EZConfig (additionalKeysP)
@@ -30,7 +30,7 @@ workspaceTags = ["web", "irc", "code", "shell"] ++ map show ([5..9] :: [Int])
 main :: IO ()
 main = xmonad $ defaultConfig
   { terminal   = "sakura",
-    modMask    = mod4Mask,
+    modMask    = mod4Mask, -- Super as mod key
 
     workspaces = workspaceTags,
 
@@ -43,7 +43,7 @@ main = xmonad $ defaultConfig
   -- Construct new windows behind older ones
     manageHook = insertPosition End Newer <> manageHook defaultConfig,
 
-  -- Remove borders, don't overlap with dzen/xmobar.
+  -- Remove borders, don't overlap with xmobar.
     layoutHook = avoidStruts . noBorders
                  $ layoutHook defaultConfig }
   
