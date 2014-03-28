@@ -3,7 +3,7 @@
 import XMonad.Main (xmonad)
 import XMonad.Core (WindowSet, WorkspaceId,
   terminal, modMask, workspaces,
-  layoutHook, logHook,
+  layoutHook, logHook, manageHook,
   normalBorderColor,focusedBorderColor)
 
 import XMonad.Config (defaultConfig)
@@ -15,10 +15,12 @@ import XMonad.StackSet (view, currentTag, focusUp, focusDown)
 -------------------------------------------------- Windows
 import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
 import XMonad.Layout.NoBorders (noBorders)
+import XMonad.Hooks.InsertPosition (insertPosition, Position(End), Focus(Newer))
 -------------------------------------------------- Xmobar / Dzen
 import XMonad.Hooks.ManageDocks (avoidStruts)
 -------------------------------------------------- Utilities
 import XMonad.Util.EZConfig (additionalKeysP)
+import Data.Monoid ((<>))
 
 -- Config:
 
@@ -37,6 +39,9 @@ main = xmonad $ defaultConfig
 
   -- Fade out inactive windows
     logHook = fadeInactiveLogHook 0.9,
+
+  -- Construct new windows behind older ones
+    manageHook = insertPosition End Newer <> manageHook defaultConfig,
 
   -- Remove borders, don't overlap with dzen/xmobar.
     layoutHook = avoidStruts . noBorders
