@@ -15,7 +15,7 @@ nmap d <C-w>
 set cpt=l
 set defsearch=g
 
-set hintchars="abcdefghijklmnopqrstuvwxyz"
+set hintchars="abcdefghijklmnoprstuvwxyz"
 
 
 highlight Hint::after -append font-size: 10pt
