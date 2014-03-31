@@ -1,0 +1,4 @@
+#define headphones_width 8
+#define headphones_height 8
+static unsigned char headphones_bits[] = {
+   0x3c, 0x42, 0x81, 0x81, 0x81, 0xe7, 0xe7, 0x66 };

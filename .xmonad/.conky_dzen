@@ -1,0 +1,17 @@
+short_units yes
+background yes
+out_to_console yes
+out_to_x no
+# Update interval in seconds
+update_interval 10
+update_interval_on_battery 30
+
+# ^ca(1,/home/kron/.xmonad/scripts/dzen_pacman.sh)  ^fg(\#a9a9a9)^i(/home/kron/.xmonad/dzen2/pacman.xbm) ^fg(\#ffa500)${exec pacman -Qu | wc -l} updates  ^ca()\
+# ^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_music.sh)$if_mpd_playing^fg(\#a9a9a9)^i(/home/kron/.xmonad/dzen2/note.xbm) ^fg(\#ffa500)${mpd_artist}   ^ca()\
+TEXT
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_network.sh) ^fg(\#a9a9a9)${execi 2 /home/kron/.xmonad/scripts/bar_wifi.sh} ^fg(\#ffa500)${wireless_essid wlp3s0}   ^ca()\
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_vol.sh) ^fg(\#a9a9a9)${execi 2 /home/kron/.xmonad/scripts/bar_vol.sh}^fg(\#ffa500)   ^ca()\
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_battery.sh) ^fg(\#a9a9a9)${execi 2 /home/kron/.xmonad/scripts/bar_battery.sh}^fg(\#ffa500)   ^ca()\
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_hardware.sh) ^fg(\#a9a9a9)${execi 2 /home/kron/.xmonad/scripts/bar_ram.sh}^fg(\#ffa500)   ^ca()\
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_date.sh) ^fg(\#a9a9a9)^i(/home/kron/.xmonad/dzen2/clock.xbm) ^fg(\#ffa500)${time %H:%M}   ^ca()\
+^ca(1,/home/kron/.xmonad/sc /home/kron/.xmonad/scripts/dzen_log.sh)^fg(\#a9a9a9)^i(/home/kron/.xmonad/dzen2/info_03.xbm)^fg(\#ffa500)^ca()
