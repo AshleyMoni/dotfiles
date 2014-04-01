@@ -1,7 +1,7 @@
 #!/bin/bash
 source $(dirname $0)/config.sh
 XPOS=$((580 + $XOFFSET))
-WIDTH="110"
+WIDTH="120"
 LINES="12"
 
 #totaldays=$(date +"%j")
@@ -10,7 +10,7 @@ LINES="12"
 #timealivedays=$(( $timealivesecs / 86400 ))
 
 time=$(date | awk -F " " '{print $4}')
-calendar=$(cal -1)
+calendar=$(cal -m)
 datea=$(date +%a)
 dateb=$(date +%b)
 dated=$(date +%d)

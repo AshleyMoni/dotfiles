@@ -1,7 +1,9 @@
-;; start the emacs server and save everything
+;; start the emacs server, load packages, load (+ save) sessions
+
+(server-start)
+(package-initialize)
 
 (desktop-save-mode)
-(server-start)
 
 ;; clean *scratch*, no more startup screen
 
@@ -13,6 +15,11 @@
 ;(add-to-list 'default-frame-alist '(width . 155))
 ;(add-to-list 'default-frame-alist '(height . 43))
 
+;; Window title for topbar.
+
+;; (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+(setq frame-title-format "xi")
+
 ;; color theme and transparency
 
 (add-to-list 'default-frame-alist '(foreground-color . "gray"))
@@ -23,7 +30,11 @@
 ;; truncate lines and make column numbers visible
 
 (setq truncate-partial-width-windows t)
-(setq column-number-mode t)
+
+;; Add column number and buffer size to modeline
+
+(column-number-mode 1)
+(size-indication-mode 1)
 
 ;; no menu-bar, toolbar or scroll bar
 
@@ -51,16 +62,13 @@
 
 ;; activate transient-mark-mode and delete-selection-mode
 
-;; (transient-mark-mode t) ; Enabled by default within GNU Emacs 23.1 onwards
+;(transient-mark-mode t) ; Enabled by default within GNU Emacs 23.1 onwards
 (delete-selection-mode)
 
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
-(package-initialize)
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
-;; (add-to-list 'after-init-hook 'global-undo-tree-mode)
-;; (add-to-list 'after-init-hook '(diminish 'undo-tree-mode))
 
 ;; Scrolling
 
@@ -82,15 +90,17 @@
 ;; (setq split-height-threshold 80)
 ;; (setq split-width-threshold 160)
 
+
 ;; Configure tramp and marmalade!
 
 (require 'tramp)
 
 (require 'package)
-(add-to-list 'package-archives
-    '("marmalade" . "http://marmalade-repo.org/packages/"))
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			 ("melpa" . "http://melpa.milkbox.net/packages/")
+			 ("marmalade" . "http://marmalade-repo.org/packages/")))
 
-;; Structured-Haskell-Mode
+;; ;; Structured-Haskell-Mode
 
 ;; (add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
 ;; (setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
@@ -98,25 +108,30 @@
 
 ;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
-;; Add line numbers to programming buffers
+
+;; Add line numbers to programming buffers and colorize their colour codes.
 
 (add-hook 'prog-mode-hook 'linum-mode)
+
+(require 'rainbow-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
+(diminish 'rainbow-mode)
 
 ;; Registers!
 
 (set-register ?e '(file . "~/.emacs"))
 (set-register ?m '(file . "~/.xmonad/xmonad.hs"))
 (set-register ?b '(file . "~/.bashrc"))
-(set-register ?c '(file . "~/.conkyrc"))
+(set-register ?c '(file . "~/.xmonad/.conky_dzen"))
 (set-register ?v '(file . "~/.vimperatorrc"))
 (set-register ?z '(file . "~/.zshrc"))
 (set-register ?i '(file . "~/.xinitrc"))
 (set-register ?d '(file . "~/.Xdefaults"))
 
+;; Set auto-mode-alist for various modes and autload others
 
-;; Set automode-alist for scheme and prolog mode
-
-(setq auto-mode-alist (append '(("\\.rkt\\'" . scheme-mode)
+(setq auto-mode-alist (append '(("\\.vimperatorrc\\'" . vimrc-mode)
+				("\\.rkt\\'" . scheme-mode)
 				("\\.pl\\'" . prolog-mode)) auto-mode-alist))
 
 ;; Custom keybindings!
@@ -184,6 +199,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(linum ((t (:inherit (shadow default) :foreground "dim gray"))))
+ '(mode-line ((t (:foreground "white"))))
+ '(mode-line-highlight ((t nil)))
+ '(mode-line-inactive ((t (:inherit mode-line :foreground "dim gray" :weight light))))
  '(shm-current-face ((t (:background "gray20"))))
  '(shm-quarantine-face ((t (:background "black"))))
  '(show-paren-match ((t (:background "gray20")))))

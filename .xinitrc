@@ -12,10 +12,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 # feh
-feh --bg-center ~/Pictures/Yin_Yang.jpg
+feh --bg-center ~/Pictures/Wallpapers/neon-genesis-evangelion-mari-wallpaper-24.jpg
 
 # Compositing
-xcompmgr &
+compton -b --config ~/.comptonrc
 
 # activating extra fonts
 xset +fp /usr/share/fonts/local
@@ -27,11 +27,14 @@ xset r rate 250 33
 # Keyboard
 xmodmap ~/.Xmodmap
 
-# # Redshift
-# redshift -t 6500:5500 &
+# Redshift
+redshift &
 
 # Load cursor before xmonad
 xrdb ~/.Xresources &
+
+# Remove the mouse after lack of use
+unclutter -root -grab &
 
 # Run Xmonad
 exec xmonad
