@@ -128,14 +128,15 @@ main = do
                               ["Full"]           -> "full.xbm"
                               _                  -> "grid.xbm")
 
-        , ppTitle  =  onMiddleClick "super+shift+c" .
-                      dzenColor foreground background .
-                      shorten 80
+        , ppTitle  = onMiddleClick "super+shift+c" .
+                     dzenColor foreground background .
+                     shorten 80
 
-        , ppOrder  =  id
+        , ppOrder  = id
 
-        -- , ppOutput =  wrap "^ca(2,xdotool key super+left)" "^ca()" >>= hPutStrLn dzenLeftBar
-        , ppOutput =  hPutStrLn dzenLeftBar
+        , ppOutput = hPutStrLn dzenLeftBar .
+                     onScrollWheelUp   "super+Left" .
+                     onScrollWheelDown "super+Right"
        }),
 
   -- Construct new windows behind older ones
