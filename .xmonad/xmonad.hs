@@ -11,7 +11,9 @@ import XMonad.Operations (windows)
 
 import XMonad.Hooks.EwmhDesktops (ewmh)
 
-import Graphics.X11.Types (mod4Mask, xK_Super_L, xK_Super_R, xK_Tab, xK_grave)
+import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave,
+                           xK_Super_L, xK_Super_R,
+                           xK_Alt_L,   xK_Alt_R)
 -------------------------------------------------- Workspaces
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown,
                         greedyView, shift)
@@ -50,7 +52,7 @@ myWorkspaces :: [String]
 --                           "^i(/home/kron/.xmonad/dzen2/mail.xbm)", -- chat / comm
 --                           "^i(/home/kron/.xmonad/dzen2/code.xbm)", -- code
 --                           "^i(/home/kron/.xmonad/dzen2/arch_10x10.xbm)", -- shell
-myWorkspaces = clickable ["[main]", "[chat]", "[code]", "[shell]",
+myWorkspaces = clickable ["main", "chat", "code", "shell",
                           "v", "vi", "vii", "viii", "ix", "x"]
   where clickable tags = [ "^ca(1,xdotool key super+" ++ show i ++ ")" ++ ws ++ "^ca()" |
                            (i,ws) <- zip ([1..9] ++ [0] :: [Int]) tags ]
@@ -116,7 +118,8 @@ main = do
                         ("M-0",   windows . greedyView $ myWorkspaces !! 9),
                         ("M-S-0", windows . shift      $ myWorkspaces !! 9),
 
-                        ("M-<Tab>", cycleRecentWS [xK_Super_L, xK_Super_R] xK_Tab xK_grave),
+                        ("M-<Tab>",  cycleRecentWS [xK_Super_L, xK_Super_R] xK_Tab xK_grave),
+                        ("M1-<Tab>", cycleRecentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
 
                         ("M-q", spawn "xmonad --recompile && killall conky && killall dzen2 && xmonad --restart")]
 

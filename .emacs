@@ -128,6 +128,8 @@
 (set-register ?i '(file . "~/.xinitrc"))
 (set-register ?d '(file . "~/.Xdefaults"))
 
+(set-register ?t '(file . "~/todo.navi"))
+
 ;; Set auto-mode-alist for various modes and autload others
 
 (setq auto-mode-alist (append '(("\\.vimperatorrc\\'" . vimrc-mode)

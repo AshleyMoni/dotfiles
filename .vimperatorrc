@@ -8,9 +8,9 @@ map l <Right>
 
 nmap d <C-w>
 
-" set editor=emacsclient -c
+set editor=~/bin/xi
 " set hinttimeout=500
-" set titlestring=Namorokron
+set titlestring=Kitsune
 
 set cpt=l
 set defsearch=g
