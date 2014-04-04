@@ -98,6 +98,13 @@
 (eval-after-load "undo-tree" '(global-undo-tree-mode))
 (eval-after-load "diminish" '(diminish 'undo-tree-mode))
 
+;; Ido mode and all associated paraphernalia
+
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+(eval-after-load "ido-vertical-mode" '(ido-vertical-mode 1))
+
 ;; Configure package archives
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
