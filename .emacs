@@ -1,7 +1,7 @@
 ;; start the emacs server, load (+ save) sessions
 
 (server-start)
-;(package-initialize)
+(package-initialize)
 (desktop-save-mode)
 
 ;; no menu-bar, toolbar or scroll bar
@@ -95,15 +95,28 @@
 
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
-(eval-after-load "undo-tree" '(global-undo-tree-mode))
-(eval-after-load "diminish" '(diminish 'undo-tree-mode))
+(global-undo-tree-mode)
+(diminish 'undo-tree-mode)
+;; (eval-after-load "undo-tree" '(global-undo-tree-mode))
+;; (eval-after-load "diminish" '(diminish 'undo-tree-mode))
 
 ;; Ido mode and all associated paraphernalia
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(ido-mode 1)
-(eval-after-load "ido-vertical-mode" '(ido-vertical-mode 1))
+
+(ido-mode)
+(ido-vertical-mode)
+(ido-at-point-mode)
+
+(smex-initialize)
+
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c M-x") 'execute-extended-command)
+
+(setq smex-prompt-string ">>= ")
+
 
 ;; Configure package archives
 
