@@ -122,15 +122,15 @@ main = do
                      onLeftClick "super+space" .
 
                      renderImage . (dzenDir' ++) .
-                     (\x -> case drop 2 $ words x of
+                     (\x -> case drop 2 $ words x of -- Drop layouthook prefix
                               ["Tall"]           -> "tall.xbm"
                               ["Mirror", "Tall"] -> "mtall.xbm"
                               ["Full"]           -> "full.xbm"
                               _                  -> "grid.xbm")
 
-        , ppTitle  = onMiddleClick "super+shift+c" .
-                     dzenColor foreground background .
-                     shorten 80
+        , ppTitle  = dzenColor foreground background .
+                     onMiddleClick "super+shift+c" .
+                     shorten 100
 
         , ppOrder  = id
 

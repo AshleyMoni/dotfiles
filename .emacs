@@ -1,24 +1,29 @@
-;; start the emacs server, load packages, load (+ save) sessions
+;; start the emacs server, load (+ save) sessions
 
 (server-start)
-(package-initialize)
-
+;(package-initialize)
 (desktop-save-mode)
+
+;; no menu-bar, toolbar or scroll bar
+
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;; clean *scratch*, no more startup screen
 
-(setq initial-scratch-message nil)
 (setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
 
 ;; window dimensions
 
 ;(add-to-list 'default-frame-alist '(width . 155))
 ;(add-to-list 'default-frame-alist '(height . 43))
 
-;; Window title for topbar.
+;; Split windows horizontally by default
 
-;; (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-(setq frame-title-format "xi")
+;(setq split-height-threshold 80)
+;(setq split-width-threshold 160)
 
 ;; color theme and transparency
 
@@ -26,6 +31,14 @@
 (add-to-list 'default-frame-alist '(background-color . "gray10"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
 (add-to-list 'default-frame-alist '(alpha . (95 90)))
+
+;; Window title for topbar.
+
+;; (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+(setq frame-title-format "xi")
+
+
+
 
 ;; truncate lines and make column numbers visible
 
@@ -35,12 +48,6 @@
 
 (column-number-mode 1)
 (size-indication-mode 1)
-
-;; no menu-bar, toolbar or scroll bar
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
 
 ;; no restrictions
 
@@ -56,19 +63,12 @@
 
 ;; highlight brackets
 
-(require 'paren)
 (show-paren-mode t)
 (setq show-paren-style 'expression)
 
-;; activate transient-mark-mode and delete-selection-mode
+;; delete-selection-mode
 
-;(transient-mark-mode t) ; Enabled by default within GNU Emacs 23.1 onwards
 (delete-selection-mode)
-
-;; Undo-tree mode, make it global, diminish it from modelines.
-
-(global-undo-tree-mode)
-(diminish 'undo-tree-mode)
 
 ;; Scrolling
 
@@ -85,17 +85,21 @@
 
 (setq echo-keystrokes 0.1)
 
-;; ;; Split windows horizontally by default
+;; Add line numbers to programming buffers and colorize their colour codes.
 
-;; (setq split-height-threshold 80)
-;; (setq split-width-threshold 160)
+(add-hook 'prog-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
+(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
 
-;; Configure tramp and marmalade!
 
-(require 'tramp)
+;; Undo-tree mode, make it global, diminish it from modelines.
 
-(require 'package)
+(eval-after-load "undo-tree" '(global-undo-tree-mode))
+(eval-after-load "diminish" '(diminish 'undo-tree-mode))
+
+;; Configure package archives
+
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("melpa" . "http://melpa.milkbox.net/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")))
@@ -109,13 +113,6 @@
 ;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
 
-;; Add line numbers to programming buffers and colorize their colour codes.
-
-(add-hook 'prog-mode-hook 'linum-mode)
-
-(require 'rainbow-mode)
-(add-hook 'prog-mode-hook 'rainbow-mode)
-(diminish 'rainbow-mode)
 
 ;; Registers!
 
@@ -133,6 +130,7 @@
 ;; Set auto-mode-alist for various modes and autload others
 
 (setq auto-mode-alist (append '(("\\.vimperatorrc\\'" . vimrc-mode)
+				("\\.h\\'" . c++-mode)
 				("\\.rkt\\'" . scheme-mode)
 				("\\.pl\\'" . prolog-mode)) auto-mode-alist))
 
@@ -157,6 +155,20 @@
 (global-set-key [M-right] 'next-buffer)
 (global-set-key [M-left] 'previous-buffer)
 
+(defun jump-to-mark ()
+  "Jumps to the local mark, respecting the `mark-ring' order.
+This is the same as using \\[set-mark-command] with the prefix argument."
+  (interactive)
+  (set-mark-command 1))
+(defun push-mark-no-activate ()
+  "Pushes `point' to `mark-ring' and does not activate the region
+Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring"))
+(global-set-key (kbd "M-`") 'jump-to-mark)
+(global-set-key (kbd "C-'") 'push-mark-no-activate)
+
 ;; ;; Load VIP and move some keys around for vim-like movement
 
 ;; (load "vip")
@@ -176,13 +188,6 @@
 ;; (global-set-key "\C-j" 'next-line)
 ;; (global-set-key "\C-k" 'previous-line)
 ;; (global-set-key "\C-l" 'forward-char)
-
-
-;; ;; Speedbar configuration
-
-;; (require 'speedbar)
-;; (speedbar-add-supported-extension ".hs")
-;; (speedbar-add-supported-extension ".sql")
 
 
 (custom-set-variables
