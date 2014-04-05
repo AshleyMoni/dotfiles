@@ -134,8 +134,6 @@ main = do
                      onMiddleClick "super+shift+c" .
                      shorten 100
 
-        , ppOrder  = id
-
         , ppOutput = hPutStrLn dzenLeftBar .
                      onScrollWheelUp   "super+Left" .
                      onScrollWheelDown "super+Right"
