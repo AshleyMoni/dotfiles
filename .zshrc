@@ -32,6 +32,10 @@ alias sars='sudo aura -Rs'
 # envoy -t ssh-agent
 # source <(envoy -p)
 
+# Auto push directories
+
+setopt AUTO_PUSHD
+
 # autocompletion with arrow-key driven interface
 zstyle ':completion:*' menu select
 

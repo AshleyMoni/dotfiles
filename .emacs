@@ -152,7 +152,8 @@
 (setq auto-mode-alist (append '(("\\.vimperatorrc\\'" . vimrc-mode)
 				("\\.h\\'" . c++-mode)
 				("\\.rkt\\'" . scheme-mode)
-				("\\.pl\\'" . prolog-mode)) auto-mode-alist))
+				("\\.pl\\'" . prolog-mode))
+			      auto-mode-alist))
 
 ;; Custom keybindings!
 
@@ -188,6 +189,11 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
   (message "Pushed mark to ring"))
 (global-set-key (kbd "M-`") 'jump-to-mark)
 (global-set-key (kbd "C-'") 'push-mark-no-activate)
+
+(defun kill-this-buffer () 
+  (interactive) 
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 
 ;; ;; Load VIP and move some keys around for vim-like movement
 

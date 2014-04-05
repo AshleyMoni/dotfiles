@@ -14,6 +14,8 @@ import XMonad.Hooks.EwmhDesktops (ewmh)
 import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave,
                            xK_Super_L, xK_Super_R,
                            xK_Alt_L, xK_Alt_R)
+
+import XMonad.Util.Run (safeSpawn)
 -------------------------------------------------- Workspaces
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown,
                         greedyView, shift)
@@ -164,6 +166,7 @@ main = do
       ("M-<Tab>",  cycleRecentWS [xK_Super_L, xK_Super_R] xK_Tab xK_grave),
       ("M1-<Tab>", cycleRecentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
 
+      ("M-p", safeSpawn "/home/kron/bin/navi-menu" []), -- Personal dmenu
       ("M-q", spawn $ "xmonad --recompile && "
                    ++ "killall conky && "
                    ++ "killall dzen2 && "
