@@ -2,7 +2,7 @@
 -------------------------------------------------- Base
 import XMonad.Main (xmonad)
 import XMonad.Core (terminal, modMask, workspaces,
-                    layoutHook, logHook, manageHook,
+                    layoutHook, logHook, manageHook, handleEventHook,
                     normalBorderColor,focusedBorderColor,
                     spawn)
 
@@ -22,22 +22,28 @@ import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown,
 import XMonad.Actions.CycleWS (nextWS, prevWS, shiftToNext, shiftToPrev)
 import XMonad.Actions.CycleRecentWS (cycleRecentWS)
 -------------------------------------------------- Windows
-import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
+import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook,
+                                 isUnfocused, opacity, opaque)
 import XMonad.Hooks.InsertPosition (insertPosition, Position(End), Focus(Newer))
 
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.Spacing (smartSpacing)
 -------------------------------------------------- Dzen
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Hooks.UrgencyHook (withUrgencyHook, NoUrgencyHook(..))
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, dzenPP,
   ppCurrent, ppHidden, ppUrgent, ppHiddenNoWindows,
-  ppWsSep, ppSep, ppLayout, ppOrder, ppOutput, ppTitle,
+  ppWsSep, ppSep, ppLayout, ppOutput, ppTitle,
   dzenColor, wrap, shorten)
 
 import XMonad.Hooks.ManageDocks (avoidStruts)
 -------------------------------------------------- Utilities
 import XMonad.Util.EZConfig (additionalKeysP)
+
+import XMonad.ManageHook (composeAll, className,
+                          (-->), (=?), (<||>), (<&&>))
 import Data.Monoid ((<>))
+import Data.Functor ((<$>))
 
 import System.IO (hPutStrLn)
 import System.Environment (getEnv)
@@ -62,7 +68,7 @@ workspaceBraces = ("side_l.xbm", "side_r.xbm")
 myWorkspaces = ["main", "chat", "code", "shell",
                 "v", "vi", "vii", "viii", "ix", "x"]
                `clickToMoveTo`
-               (map show $ [1..9] ++ [0])
+               (map show $ [1..9] ++ [0 :: Int])
 
   where clickToMoveTo :: [String] -> [String] -> [String]
         clickToMoveTo tags keys = [ onLeftClick ("super+" ++ show i) ws |
@@ -99,7 +105,8 @@ main = do
       wrappedIn = workspaceFormat dzenDir'
       withGlyph = addGlyph        dzenDir'
 
-  xmonad $ ewmh defaultConfig {
+  xmonad $ withUrgencyHook NoUrgencyHook
+         $ ewmh defaultConfig {
     terminal   = "sakura",
     modMask    = mod4Mask, -- Super as mod key
 
@@ -108,14 +115,22 @@ main = do
     focusedBorderColor = foreground,
     normalBorderColor  = background,
 
-  -- Fade out inactive windows, set up xdzen
-    logHook = fadeInactiveLogHook 0.9 >>
-      dynamicLogWithPP (dzenPP {
-          ppWsSep  = ""
+    -- Fade out inactive windows, set up xdzen
+    logHook = do
+      fadeWindowsLogHook $ composeAll
+        [ opaque
+        , isUnfocused              --> opacity 0.9 
+        , className =? "Vlc"       --> opaque 
+        , (className =? "Emacs" <||>
+           className =? "Sakura")
+          <&&> not <$> isUnfocused --> opacity 0.95 ]
+
+      dynamicLogWithPP $ dzenPP
+        { ppWsSep  = ""
         , ppCurrent         = black     `wrappedIn` orange
         , ppHidden          = "#dcdcdc" `wrappedIn` "#1a1a1a"
         , ppHiddenNoWindows = "#404040" `wrappedIn` "#1a1a1a"
-        , ppUrgent          = ("#dcdcdc" `wrappedIn` "#f92672") .
+        , ppUrgent          = (black `wrappedIn` "#ff4500") .
                               withGlyph "notice.xbm"
 
         , ppSep    = "  "
@@ -136,13 +151,14 @@ main = do
 
         , ppOutput = hPutStrLn dzenLeftBar .
                      onScrollWheelUp   "super+Left" .
-                     onScrollWheelDown "super+Right"
-       }),
+                     onScrollWheelDown "super+Right" },
 
-  -- Construct new windows behind older ones
+    handleEventHook = fadeWindowsEventHook,
+
+    -- Construct new windows behind older ones
     manageHook = insertPosition End Newer <> manageHook defaultConfig,
 
-  -- Remove borders, don't overlap with dzen, space windows apart
+    -- Remove borders, don't overlap with dzen, space windows apart
     layoutHook = smartSpacing 6 . avoidStruts . noBorders
                  $ layoutHook defaultConfig }
 
@@ -199,7 +215,7 @@ onScrollWheelDown = xdotool 5
 
 -- Prepend an image symbol to a workspace name
 addGlyph :: String -> String -> String -> String
-addGlyph dzen glyph = ((renderImage $ dzen ++ glyph) ++)
+addGlyph dzen glyph = (++ " " ++ (renderImage $ dzen ++ glyph))
 
 -- Format an image filepath to tell dzen to render it.
 renderImage :: String -> String

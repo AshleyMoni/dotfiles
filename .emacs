@@ -30,13 +30,12 @@
 (add-to-list 'default-frame-alist '(foreground-color . "gray"))
 (add-to-list 'default-frame-alist '(background-color . "gray10"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
-(add-to-list 'default-frame-alist '(alpha . (95 90)))
+;(add-to-list 'default-frame-alist '(alpha . (95 90))) ;; Centralized transparency rules in my xmonad.hs
 
 ;; Window title for topbar.
 
-;; (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-(setq frame-title-format "xi")
-
+(setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+;; (setq frame-title-format "xi")
 
 
 
