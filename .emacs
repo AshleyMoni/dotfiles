@@ -84,13 +84,16 @@
 
 (setq echo-keystrokes 0.1)
 
-;; Add line numbers to programming buffers and colorize their colour codes.
+;; Add line numbers to programming buffers, highlight indentation and
+;; colorize their colour codes.
+
+(require 'indent-guide)
 
 (add-hook 'prog-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'indent-guide-mode)
 (add-hook 'prog-mode-hook 'rainbow-mode)
-(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
-
+(eval-after-load 'rainbow-mode '(diminish 'rainbow-mode))
 
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
@@ -213,7 +216,6 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
 ;; (global-set-key "\C-j" 'next-line)
 ;; (global-set-key "\C-k" 'previous-line)
 ;; (global-set-key "\C-l" 'forward-char)
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
