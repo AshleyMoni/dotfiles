@@ -10,18 +10,15 @@ import XMonad.Core (terminal, modMask, workspaces,
 import XMonad.Config (defaultConfig)
 import XMonad.Operations (windows)
 
-import XMonad.Hooks.EwmhDesktops (ewmh)
-
 import XMonad.Util.Cursor (setDefaultCursor)
-import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave,
-                           xK_Super_L, xK_Super_R,
-                           xK_Alt_L, xK_Alt_R)
+import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave, xK_Alt_L, xK_Alt_R)
 import Graphics.X11.Xlib.Cursor (xC_left_ptr)
 
 import XMonad.Util.Run (safeSpawn)
 -------------------------------------------------- Workspaces
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown,
                         greedyView, shift)
+import XMonad.ManageHook (doShift)
 
 import XMonad.Actions.CycleWS (nextWS, prevWS, shiftToNext, shiftToPrev)
 import XMonad.Actions.CycleRecentWS (cycleRecentWS)
@@ -31,6 +28,8 @@ import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace,
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook,
                                  isUnfocused, opacity, opaque)
 import XMonad.Hooks.InsertPosition (insertPosition, Position(End), Focus(Newer))
+import XMonad.ManageHook (doFloat)
+import XMonad.Hooks.Place (placeHook, smart)
 
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.Spacing (smartSpacing)
@@ -100,8 +99,8 @@ main = do
       wrappedIn = workspaceFormat dzenDir'
       withGlyph = addGlyph        dzenDir'
 
-  xmonad $ withUrgencyHook NoUrgencyHook
-         $ ewmh defaultConfig
+  xmonad . withUrgencyHook NoUrgencyHook
+         $ defaultConfig
     { terminal   = "sakura",
       modMask    = mod4Mask, -- Super as mod key
 
@@ -118,11 +117,19 @@ main = do
       layoutHook = smartSpacing 6 . avoidStruts . noBorders
                    $ layoutHook defaultConfig,
 
-      -- Construct new windows behind older ones
-      manageHook = insertPosition End Newer <> manageHook defaultConfig,
-
       -- Reapply transparency rules on any X events
       handleEventHook = fadeWindowsEventHook,
+
+      -- Construct new windows behind older ones
+      manageHook = insertPosition End Newer <>
+                   composeAll
+                     [ className =? "MPlayer" --> doFloat
+                     , className =? "Gimp"    --> doFloat
+
+                     , className =? "FTL"     --> placeHook (smart (0.5,0.5))
+
+                     , className =? "Firefox" --> doShift "main"
+                     , className =? "Steam"   --> doShift "ix" ],
 
       -- Window fade rules, set up xdzen
       logHook = do
@@ -130,8 +137,9 @@ main = do
           [ opaque
           , isUnfocused              --> opacity 0.9 
           , className =? "Vlc"       --> opaque 
-          , (className =? "Emacs" <||>
-             className =? "Sakura")
+          , (className =? "Emacs"  <||>
+             className =? "Sakura" <||>
+             className =? "Xchat")
             <&&> not <$> isUnfocused --> opacity 0.95 ]
 
         dynamicLogWithPP $ dzenPP
@@ -181,7 +189,7 @@ main = do
       ("M-0",   windows . greedyView $ workspaceTags !! 9),
       ("M-S-0", windows . shift      $ workspaceTags !! 9),
 
-      ("M-<Tab>",  cycleRecentWS [xK_Super_L, xK_Super_R] xK_Tab xK_grave),
+      ("M1-<Tab>",  cycleRecentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
 
       ("M-`",   viewEmptyWorkspace),
       ("M-S-`", tagToEmptyWorkspace),
