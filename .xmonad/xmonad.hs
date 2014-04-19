@@ -46,8 +46,8 @@ import XMonad.Hooks.ManageDocks (avoidStruts)
 -------------------------------------------------- Utilities
 import XMonad.Util.EZConfig (additionalKeysP)
 
-import XMonad.ManageHook (composeAll, className,
-                          (-->), (=?), (<||>), (<&&>))
+import XMonad.ManageHook (composeAll, className, (--> -- Github thinks this is a comment
+                          ), (=?), (<||>), (<&&>))    -- so we need to shift ) to match
 import Data.Functor ((<$>))
 import Control.Applicative ((<*>))
 import Data.List (elemIndex)
