@@ -1,3 +1,3 @@
-if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
-    startx
-fi
+# Automatically start X at boot
+
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
