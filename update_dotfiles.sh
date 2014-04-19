@@ -7,6 +7,7 @@
 cp ~/.bashrc .
 cp ~/.zshrc .
 cp ~/.zshenv .
+cp ~/.zprofile .
 
 ## rc files
 cp ~/.emacs .
