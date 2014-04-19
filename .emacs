@@ -25,12 +25,14 @@
 ;(setq split-height-threshold 80)
 ;(setq split-width-threshold 160)
 
-;; color theme and transparency
+;; color theme and transparency... and remove vertical borders
 
 (add-to-list 'default-frame-alist '(foreground-color . "gray"))
 (add-to-list 'default-frame-alist '(background-color . "gray10"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
 ;(add-to-list 'default-frame-alist '(alpha . (95 90))) ;; Centralized transparency rules in my xmonad.hs
+(set-face-foreground 'vertical-border "gray10")
+;(set-face-background 'vertical-border "gray10")
 
 ;; Window title for topbar.
 
@@ -69,6 +71,11 @@
 
 (delete-selection-mode)
 
+;; Focus follows mouse, inform emacs that my xmonad does the same.
+
+(setq focus-follows-mouse t)
+(setq mouse-autoselect-window t)
+
 ;; Scrolling
 
 (setq scroll-margin 5)
@@ -94,22 +101,30 @@
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
 (eval-after-load 'rainbow-mode '(diminish 'rainbow-mode))
+(eval-after-load 'indent-guide '(diminish 'indent-guide-mode))
 
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
-;; (eval-after-load "undo-tree" '(global-undo-tree-mode))
-;; (eval-after-load "diminish" '(diminish 'undo-tree-mode))
+;eval-after-load "undo-tree" '(global-undo-tree-mode))
+;eval-after-load "diminish" '(diminish 'undo-tree-mode))
 
 ;; Ido mode and all associated paraphernalia
 
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-
 (ido-mode)
+
+(add-hook 'ido-setup-hook 'ido-my-keys)
+
+(defun ido-my-keys ()
+  (define-key ido-completion-map (kbd "TAB") 'ido-next-match))
+
+(ido-ubiquitous-mode)
 (ido-vertical-mode)
 (ido-at-point-mode)
+
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
 
 (smex-initialize)
 
@@ -118,7 +133,8 @@
 (global-set-key (kbd "C-c M-x") 'execute-extended-command)
 
 (setq smex-prompt-string ">>= ")
-
+;(setq smex-auto-update nil)
+;(smex-auto-update 60)
 
 ;; Configure package archives
 
@@ -126,19 +142,32 @@
 			 ("melpa" . "http://melpa.milkbox.net/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")))
 
-;; ;; Structured-Haskell-Mode
+;; Sublime emulation
 
-;; (add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
-;; (setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
-;; (require 'shm)
+;(require 'sublimity)
+;(require 'sublimity-map)
 
-;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+;(setq sublimity-map-size 20)
+;(setq sublimity-map-fraction 0.3)
+;(setq sublimity-map-text-scale -7)
+;(sublimity-map-set-delay nil)
+
+;(sublimity-mode)
+
+;; Structured-Haskell-Mode
+
+;(add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
+;(setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
+;(require 'shm)
+
+;(add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
 
 
 ;; Registers!
 
 (set-register ?e '(file . "~/.emacs"))
+(set-register ?g '(file . "~/.ghci"))
 (set-register ?m '(file . "~/.xmonad/xmonad.hs"))
 (set-register ?b '(file . "~/.bashrc"))
 (set-register ?c '(file . "~/.xmonad/.conky_dzen"))
@@ -156,6 +185,21 @@
 				("\\.rkt\\'" . scheme-mode)
 				("\\.pl\\'" . prolog-mode))
 			      auto-mode-alist))
+
+;; Evil mode and powerline to go with it
+
+(evil-mode)
+
+(add-to-list 'load-path "~/.emacs.d/powerline/")
+(require 'powerline)
+(powerline-evil-theme)
+
+(define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
+(define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+
+(key-chord-mode 1)
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
 ;; Custom keybindings!
 
@@ -222,6 +266,8 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-cross-lines t)
+ '(evil-move-cursor-back nil)
  '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
  '(prolog-indent-width 2)
  '(prolog-system (quote swi))
@@ -233,9 +279,14 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(linum ((t (:inherit (shadow default) :foreground "dim gray"))))
- '(mode-line ((t (:foreground "white"))))
+ '(mode-line ((t (:background "grey75" :foreground "black"))))
  '(mode-line-highlight ((t nil)))
- '(mode-line-inactive ((t (:inherit mode-line :foreground "dim gray" :weight light))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "grey30" :foreground "grey80" :weight light))))
+ '(powerline-active1 ((t (:inherit mode-line :background "gray10" :foreground "white"))))
+ '(powerline-active2 ((t (:inherit mode-line :background "gray20" :foreground "white"))))
+ '(powerline-active3 ((t (:inherit mode-line :background "gray30" :foreground "white"))))
+ '(powerline-inactive1 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
+ '(powerline-inactive2 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
  '(shm-current-face ((t (:background "gray20"))))
  '(shm-quarantine-face ((t (:background "black"))))
  '(show-paren-match ((t (:background "gray20")))))

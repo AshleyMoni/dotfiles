@@ -16,8 +16,7 @@ fi
 # export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 # feh
-feh --bg-center ~/Pictures/Wallpapers/neon-genesis-evangelion-mari-wallpaper-24.jpg
-
+eval $(cat ~/.fehbg)
 
 # Compositing
 compton -b --config ~/.comptonrc

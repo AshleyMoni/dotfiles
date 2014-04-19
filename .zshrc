@@ -27,7 +27,7 @@ alias sasyu='sudo aura -Syu'
 alias sar='sudo aura -R'
 alias sars='sudo aura -Rs'
 
-# # Set up envoy for ssh
+## Set up envoy for ssh
 
 # envoy -t ssh-agent
 # source <(envoy -p)

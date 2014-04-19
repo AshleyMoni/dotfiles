@@ -8,7 +8,7 @@ import XMonad.Core (terminal, modMask, workspaces,
                     spawn)
 
 import XMonad.Config (defaultConfig)
-import XMonad.Operations (windows)
+import XMonad.Operations (windows, kill)
 
 import XMonad.Util.Cursor (setDefaultCursor)
 import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave, xK_Alt_L, xK_Alt_R)
@@ -16,9 +16,10 @@ import Graphics.X11.Xlib.Cursor (xC_left_ptr)
 
 import XMonad.Util.Run (safeSpawn)
 -------------------------------------------------- Workspaces
+import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown,
                         greedyView, shift)
-import XMonad.ManageHook (doShift)
+import XMonad.ManageHook (doShift, title)
 
 import XMonad.Actions.CycleWS (nextWS, prevWS, shiftToNext, shiftToPrev)
 import XMonad.Actions.CycleRecentWS (cycleRecentWS)
@@ -26,8 +27,8 @@ import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace,
                                           tagToEmptyWorkspace)
 -------------------------------------------------- Windows
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook,
-                                 isUnfocused, opacity, opaque)
-import XMonad.Hooks.InsertPosition (insertPosition, Position(End), Focus(Newer))
+                                 isUnfocused, isFloating, opacity, opaque)
+import XMonad.Hooks.InsertPosition (insertPosition, Position(End, Above), Focus(Newer))
 import XMonad.ManageHook (doFloat)
 import XMonad.Hooks.Place (placeHook, smart)
 
@@ -47,7 +48,6 @@ import XMonad.Util.EZConfig (additionalKeysP)
 
 import XMonad.ManageHook (composeAll, className,
                           (-->), (=?), (<||>), (<&&>))
-import Data.Monoid ((<>))
 import Data.Functor ((<$>))
 import Control.Applicative ((<*>))
 import Data.List (elemIndex)
@@ -100,7 +100,8 @@ main = do
       withGlyph = addGlyph        dzenDir'
 
   xmonad . withUrgencyHook NoUrgencyHook
-         $ defaultConfig
+         . ewmh
+    $ defaultConfig
     { terminal   = "sakura",
       modMask    = mod4Mask, -- Super as mod key
 
@@ -121,25 +122,33 @@ main = do
       handleEventHook = fadeWindowsEventHook,
 
       -- Construct new windows behind older ones
-      manageHook = insertPosition End Newer <>
+      manageHook = --insertPosition End Newer <>
                    composeAll
-                     [ className =? "MPlayer" --> doFloat
-                     , className =? "Gimp"    --> doFloat
+                     [ -- not <$> isFloating       --> insertPosition End Newer
+                       -- insertPosition Above Newer
+                       className =? "MPlayer"   --> doFloat
+                     , className =? "Gimp"      --> doFloat
 
-                     , className =? "FTL"     --> placeHook (smart (0.5,0.5))
+                     , className =? "FTL"       --> placeHook (smart (0.5, 0.5))
 
-                     , className =? "Firefox" --> doShift "main"
-                     , className =? "Steam"   --> doShift "ix" ],
+                     , className =? "Firefox"   --> doShift "main"
+                     , (className =? "Xchat"   <||>
+                        className =? "Hexchat" <||>
+                        title     =? "Friends") --> doShift "chat"
+                     , title =? "Steam"         --> doShift "ix" ],
 
-      -- Window fade rules, set up xdzen
+      -- Window fade rules, set up dzen
       logHook = do
         fadeWindowsLogHook $ composeAll
           [ opaque
-          , isUnfocused              --> opacity 0.9 
-          , className =? "Vlc"       --> opaque 
+          , isUnfocused              --> opacity 0.9
+
+          , (className =? "Vlc" <||>
+             className =? "Firefox") --> opaque
+
           , (className =? "Emacs"  <||>
              className =? "Sakura" <||>
-             className =? "Xchat")
+             className =? "Xchat"  <||> className =? "Hexchat")
             <&&> not <$> isUnfocused --> opacity 0.95 ]
 
         dynamicLogWithPP $ dzenPP
@@ -189,7 +198,8 @@ main = do
       ("M-0",   windows . greedyView $ workspaceTags !! 9),
       ("M-S-0", windows . shift      $ workspaceTags !! 9),
 
-      ("M1-<Tab>",  cycleRecentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
+      ("M1-<Tab>", cycleRecentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
+      ("M1-<F4>",  kill),
 
       ("M-`",   viewEmptyWorkspace),
       ("M-S-`", tagToEmptyWorkspace),

@@ -1,5 +1,10 @@
 map J :tabnext<CR>
 map K :tabprevious<CR>
+map <C-j> :tabnext<CR>
+map <C-k> :tabprevious<CR>
+
+map <C-h> :back<CR>
+map <C-l> :forward<CR>
 
 map h <Left>
 map j <Down>
