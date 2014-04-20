@@ -16,5 +16,5 @@ else
         | gdbar -bg $bar_bg -fg $bar_fg -h 1 -w 50`
 fi
 
-ICON='^i(/home/kron/.xmonad/dzen2/'"$ICON)"
+ICON='^i(/home/ashley/.xmonad/dzen2/'"$ICON)"
 echo "$ICON $PERCBAR"

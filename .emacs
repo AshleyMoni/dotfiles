@@ -194,6 +194,7 @@
 (require 'powerline)
 (powerline-evil-theme)
 
+(add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
 (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)

@@ -4,7 +4,7 @@ import XMonad.Main (xmonad)
 import XMonad.Core (terminal, modMask, workspaces,
                     startupHook, handleEventHook,
                     layoutHook, logHook, manageHook,
-                    normalBorderColor,focusedBorderColor,
+                    normalBorderColor, focusedBorderColor, borderWidth,
                     spawn)
 
 import XMonad.Config (defaultConfig)
@@ -28,7 +28,8 @@ import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace,
 -------------------------------------------------- Windows
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook,
                                  isUnfocused, isFloating, opacity, opaque)
-import XMonad.Hooks.InsertPosition (insertPosition, Position(End, Above), Focus(Newer))
+import XMonad.Hooks.InsertPosition (insertPosition,
+                                    Position(End, Above), Focus(Newer))
 import XMonad.ManageHook (doFloat)
 import XMonad.Hooks.Place (placeHook, smart)
 
@@ -110,6 +111,7 @@ main = do
 
       focusedBorderColor = foreground,
       normalBorderColor  = background,
+      borderWidth = 0,
 
       -- Set the cursor theme for the root window / desktop
       startupHook = setDefaultCursor xC_left_ptr,
@@ -204,7 +206,7 @@ main = do
       ("M-`",   viewEmptyWorkspace),
       ("M-S-`", tagToEmptyWorkspace),
 
-      ("M-p", safeSpawn "/home/kron/bin/navi-menu" []), -- Personal dmenu
+      ("M-p", safeSpawn "/home/ashley/bin/navi-menu" []), -- Personal dmenu
       ("M-q", spawn $ "xmonad --recompile && "
                    ++ "killall conky && "
                    ++ "killall dzen2 && "

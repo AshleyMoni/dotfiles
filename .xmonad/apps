@@ -1,14 +1,14 @@
- ^fg(#626e74)^i(/home/kron/.dzen/arch.xbm)^fg() term:sakura
- ^fg(#626e74)^i(/home/kron/.dzen/fs_01.xbm)^fg() www:chromium
- ^fg(#626e74)^i(/home/kron/.dzen/diskette.xbm)^fg() pdf:zathura
- ^fg(#626e74)^i(/home/kron/.dzen/plug.xbm)^fg() doc:lowriter
- ^fg(#626e74)^i(/home/kron/.dzen/stop.xbm)^fg() xls:localc
- ^fg(#626e74)^i(/home/kron/.dzen/ac.xbm)^fg() ppt:loimpress
- ^fg(#626e74)^i(/home/kron/.dzen/fox.xbm)^fg() gimp:gimp
- ^fg(#626e74)^i(/home/kron/.dzen/note.xbm)^fg() ario:ario
- ^fg(#626e74)^i(/home/kron/.dzen/mem.xbm)^fg() matlab:sakura -e matlab -nodesktop -nosplash
+ ^fg(#626e74)^i(/home/ashley/.dzen/arch.xbm)^fg() term:sakura
+ ^fg(#626e74)^i(/home/ashley/.dzen/fs_01.xbm)^fg() www:chromium
+ ^fg(#626e74)^i(/home/ashley/.dzen/diskette.xbm)^fg() pdf:zathura
+ ^fg(#626e74)^i(/home/ashley/.dzen/plug.xbm)^fg() doc:lowriter
+ ^fg(#626e74)^i(/home/ashley/.dzen/stop.xbm)^fg() xls:localc
+ ^fg(#626e74)^i(/home/ashley/.dzen/ac.xbm)^fg() ppt:loimpress
+ ^fg(#626e74)^i(/home/ashley/.dzen/fox.xbm)^fg() gimp:gimp
+ ^fg(#626e74)^i(/home/ashley/.dzen/note.xbm)^fg() ario:ario
+ ^fg(#626e74)^i(/home/ashley/.dzen/mem.xbm)^fg() matlab:sakura -e matlab -nodesktop -nosplash
 ----------
- ^fg(#777777)^i(/home/kron/.dzen/play.xbm)^fg() run:gmrun
- ^fg(#777777)^i(/home/kron/.dzen/full.xbm)^fg() suspend:systemctl suspend
- ^fg(#777777)^i(/home/kron/.dzen/half.xbm)^fg() restart:systemctl reboot
- ^fg(#777777)^i(/home/kron/.dzen/empty.xbm)^fg() shutdown:systemctl poweroff
+ ^fg(#777777)^i(/home/ashley/.dzen/play.xbm)^fg() run:gmrun
+ ^fg(#777777)^i(/home/ashley/.dzen/full.xbm)^fg() suspend:systemctl suspend
+ ^fg(#777777)^i(/home/ashley/.dzen/half.xbm)^fg() restart:systemctl reboot
+ ^fg(#777777)^i(/home/ashley/.dzen/empty.xbm)^fg() shutdown:systemctl poweroff
