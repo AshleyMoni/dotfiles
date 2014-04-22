@@ -1,20 +1,20 @@
-map J :tabnext<CR>
-map K :tabprevious<CR>
-map <C-j> :tabnext<CR>
-map <C-k> :tabprevious<CR>
+nmap J :tabnext<CR>
+nmap K :tabprevious<CR>
+nmap <C-j> :tabnext<CR>
+nmap <C-k> :tabprevious<CR>
 
-map <C-h> :back<CR>
-map <C-l> :forward<CR>
+nmap <C-h> :back<CR>
+nmap <C-l> :forward<CR>
 
-map h <Left>
-map j <Down>
-map k <Up>
-map l <Right>
+nmap h <Left>
+nmap j <Down>
+nmap k <Up>
+nmap l <Right>
 
 nmap d <C-w>
+nmap s ;t
 
 set editor=~/bin/xi
-" set hinttimeout=500
 set titlestring=Kitsune
 
 set cpt=l
@@ -24,12 +24,3 @@ set hintchars="abcdefghijklmnoprstuvwxyz"
 
 
 highlight Hint::after -append font-size: 10pt
-
-" nmap s :noscript toggletemp<CR>
-" vmap s :noscript toggletemp<CR>
-" 
-" nmap S :noscript toggleperm<CR>
-" vmap S :noscript toggleperm<CR>
-
-" let g:smooziee_scroll_amount="100"
-" let g:smooziee_scroll_interval="20"

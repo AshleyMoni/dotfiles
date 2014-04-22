@@ -1,8 +1,7 @@
-;; start the emacs server, load (+ save) sessions
+;; start the emacs server
 
 (server-start)
 (package-initialize)
-(desktop-save-mode)
 
 ;; no menu-bar, toolbar or scroll bar
 
@@ -10,36 +9,21 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; clean *scratch*, no more startup screen
-
-(setq inhibit-startup-message t)
-(setq initial-scratch-message nil)
-
-;; window dimensions
-
-;(add-to-list 'default-frame-alist '(width . 155))
-;(add-to-list 'default-frame-alist '(height . 43))
-
-;; Split windows horizontally by default
-
-;(setq split-height-threshold 80)
-;(setq split-width-threshold 160)
-
 ;; color theme and transparency... and remove vertical borders
 
 (add-to-list 'default-frame-alist '(foreground-color . "gray"))
 (add-to-list 'default-frame-alist '(background-color . "gray10"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
-;(add-to-list 'default-frame-alist '(alpha . (95 90))) ;; Centralized transparency rules in my xmonad.hs
 (set-face-foreground 'vertical-border "gray10")
-;(set-face-background 'vertical-border "gray10")
 
 ;; Window title for topbar.
 
 (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-;; (setq frame-title-format "xi")
 
+;; clean *scratch*, no more startup screen
 
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
 
 ;; truncate lines and make column numbers visible
 
@@ -91,6 +75,17 @@
 
 (setq echo-keystrokes 0.1)
 
+;; Backups
+
+(setq backup-by-copying t)
+(setq backup-directory-alist '(("." . "~/.emacs.d/.saves")))
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq version-control t)
+
+
+
 ;; Add line numbers to programming buffers, highlight indentation and
 ;; colorize their colour codes.
 
@@ -107,8 +102,6 @@
 
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
-;eval-after-load "undo-tree" '(global-undo-tree-mode))
-;eval-after-load "diminish" '(diminish 'undo-tree-mode))
 
 ;; Ido mode and all associated paraphernalia
 
@@ -119,12 +112,14 @@
 (defun ido-my-keys ()
   (define-key ido-completion-map (kbd "TAB") 'ido-next-match))
 
+(flx-ido-mode)
 (ido-ubiquitous-mode)
 (ido-vertical-mode)
 (ido-at-point-mode)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
+(setq ido-use-faces nil)
 
 (smex-initialize)
 
@@ -157,7 +152,7 @@
 ;; Structured-Haskell-Mode
 
 ;(add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
-;(setq shm-program-name "/home/kron/.cabal/bin/structured-haskell-mode")
+;(setq shm-program-name "/home/ashley/.cabal/bin/structured-haskell-mode")
 ;(require 'shm)
 
 ;(add-hook 'haskell-mode-hook 'structured-haskell-mode)
@@ -189,15 +184,34 @@
 ;; Evil mode and powerline to go with it
 
 (evil-mode)
+(global-surround-mode)
 
 (add-to-list 'load-path "~/.emacs.d/powerline/")
 (require 'powerline)
 (powerline-evil-theme)
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
-(define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
-(define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+
+(define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
+(define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
+;; (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
+;; (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
+;; (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+
+(define-key evil-normal-state-map (kbd "<S-return>")
+  (lambda () (interactive)
+    (evil-open-above 1)
+    (evil-normal-state)))
+
+(define-key evil-normal-state-map (kbd "RET")
+  (lambda () (interactive)
+    (evil-open-below 1)
+    (evil-normal-state)))
+
+(define-key evil-normal-state-map (kbd "SPC")
+  (lambda () (interactive)
+    (insert " ")
+    (evil-insert 1)))
 
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
@@ -242,25 +256,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
   (kill-buffer (current-buffer)))
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 
-;; ;; Load VIP and move some keys around for vim-like movement
 
-;; (load "vip")
-;; (global-set-key "\C-z" 'vip-change-mode-to-vi)
-
-;; ; (backward-char) C-b <- C-h is the help map (help-command)
-;; ; (next-line) C-n     <- C-j is (newline-and-indent)
-;; ; (previous-line) C-p <- C-k is (kill-line)
-;; ; (forward-char) C-f  <- C-l is (recenter-top-bottom)
-
-;; (global-set-key "\C-b" 'help-command)
-;; (global-set-key "\C-n" 'newline-and-indent)
-;; (global-set-key "\C-p" 'kill-line)
-;; (global-set-key "\C-f" 'recenter-top-bottom)
-
-;; (global-set-key "\C-h" 'backward-char)
-;; (global-set-key "\C-j" 'next-line)
-;; (global-set-key "\C-k" 'previous-line)
-;; (global-set-key "\C-l" 'forward-char)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -269,6 +265,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If there is more than one, they won't work right.
  '(evil-cross-lines t)
  '(evil-move-cursor-back nil)
+ '(evil-shift-width 2)
  '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
  '(prolog-indent-width 2)
  '(prolog-system (quote swi))
