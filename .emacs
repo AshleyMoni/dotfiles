@@ -175,11 +175,11 @@
 
 ;; Set auto-mode-alist for various modes and autload others
 
-(setq auto-mode-alist (append '(("\\.vimperatorrc\\'" . vimrc-mode)
-				("\\.h\\'" . c++-mode)
-				("\\.rkt\\'" . scheme-mode)
-				("\\.pl\\'" . prolog-mode))
-			      auto-mode-alist))
+(setq auto-mode-alist
+   (append '(("\\.vimperatorrc\\'" . vimrc-mode)
+	     ("\\.h\\'" . c++-mode)
+	     ("\\.rkt\\'" . scheme-mode)
+	     ("\\.pl\\'" . prolog-mode)) auto-mode-alist))
 
 ;; Evil mode and powerline to go with it
 
@@ -194,8 +194,8 @@
 
 (define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
 (define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
-;; (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
-;; (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
+(define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
 ;; (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
 
 (define-key evil-normal-state-map (kbd "<S-return>")
@@ -208,10 +208,21 @@
     (evil-open-below 1)
     (evil-normal-state)))
 
-(define-key evil-normal-state-map (kbd "SPC")
-  (lambda () (interactive)
-    (insert " ")
-    (evil-insert 1)))
+(setq evil-ace-jump-active t)
+
+(define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-word-mode)
+(define-key evil-motion-state-map (kbd "SPC") 'evil-ace-jump-word-mode)
+
+(define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-char-mode)
+(define-key evil-motion-state-map (kbd "C-SPC") 'evil-ace-jump-char-mode)
+
+(define-key evil-normal-state-map (kbd "gl") 'evil-ace-jump-line-mode)
+(define-key evil-motion-state-map (kbd "gl") 'evil-ace-jump-line-mode)
+
+;; (define-key evil-normal-state-map (kbd "SPC")
+;;   (lambda () (interactive)
+;;     (insert " ")
+;;     (evil-insert 1)))
 
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
@@ -234,8 +245,11 @@
 
 (global-set-key [C-tab] 'other-window)
 (global-set-key [C-S-iso-lefttab] (lambda () (interactive) (other-window -1)))
+
 (global-set-key [M-right] 'next-buffer)
 (global-set-key [M-left] 'previous-buffer)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (defun jump-to-mark ()
   "Jumps to the local mark, respecting the `mark-ring' order.
