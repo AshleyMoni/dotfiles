@@ -22,5 +22,4 @@ set defsearch=g
 
 set hintchars="abcdefghijklmnoprstuvwxyz"
 
-
 highlight Hint::after -append font-size: 10pt

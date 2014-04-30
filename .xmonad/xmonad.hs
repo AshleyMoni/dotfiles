@@ -11,7 +11,8 @@ import XMonad.Config (defaultConfig)
 import XMonad.Operations (windows, kill)
 
 import XMonad.Util.Cursor (setDefaultCursor)
-import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave, xK_Alt_L, xK_Alt_R)
+import Graphics.X11.Types (mod4Mask, xK_Tab, xK_grave,
+                           xK_Alt_L, xK_Alt_R, xK_Super_L, xK_Super_R)
 import Graphics.X11.Xlib.Cursor (xC_left_ptr)
 
 import XMonad.Util.Run (safeSpawn)
@@ -45,7 +46,7 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, dzenPP,
 
 import XMonad.Hooks.ManageDocks (avoidStruts)
 -------------------------------------------------- Utilities
-import XMonad.Util.EZConfig (additionalKeysP)
+import XMonad.Util.EZConfig (additionalKeysP, additionalKeys)
 
 import XMonad.ManageHook (composeAll, className, (--> -- Github thinks this is a comment
                           ), (=?), (<||>), (<&&>))    -- so we need to shift ) to match
@@ -128,16 +129,18 @@ main = do
                    composeAll
                      [ -- not <$> isFloating       --> insertPosition End Newer
                        -- insertPosition Above Newer
-                       className =? "MPlayer"   --> doFloat
-                     , className =? "Gimp"      --> doFloat
+                       className  =? "MPlayer"     --> doFloat
+                     , className  =? "Gimp"        --> doFloat
 
-                     , className =? "FTL"       --> placeHook (smart (0.5, 0.5))
+                     , className  =? "FTL"         --> placeHook (smart (0.5, 0.5))
 
-                     , className =? "Firefox"   --> doShift "main"
+                     , (className =? "Firefox" <||>
+                        className =? "dota_linux") --> doShift "main"
                      , (className =? "Xchat"   <||>
                         className =? "Hexchat" <||>
-                        title     =? "Friends") --> doShift "chat"
-                     , title =? "Steam"         --> doShift "ix" ],
+                        title     =? "Friends")    --> doShift "chat"
+                     , title      =? "Steam"       --> doShift "ix"
+                     , className  =? "Exaile"      --> doShift "x" ],
 
       -- Window fade rules, set up dzen
       logHook = do
@@ -210,7 +213,13 @@ main = do
       ("M-q", spawn $ "xmonad --recompile && "
                    ++ "killall conky && "
                    ++ "killall dzen2 && "
-                   ++ "xmonad --restart") ]
+                   ++ "xmonad --restart"),
+      ("M-S-q", safeSpawn "/usr/bin/systemctl" ["poweroff"]) ]
+
+    `additionalKeys`
+
+    [ ((0, xK_Super_L), return ())   -- Make XMonad capture all super keypresses
+    , ((0, xK_Super_R), return ()) ] -- instead of VirtualBox
 
 ---- Dzen Helpers
 

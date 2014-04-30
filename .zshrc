@@ -12,7 +12,7 @@ alias lag='ls -lAh | grep'
 alias pag='ps -A   | grep'
 
 alias untar='tar -xf'
-alias unzip='7za x'
+# alias unzip='7za x'
 
 # Aura aliases
 

@@ -1,6 +1,7 @@
 ;; start the emacs server
 
 (server-start)
+(desktop-save-mode)
 (package-initialize)
 
 ;; no menu-bar, toolbar or scroll bar
@@ -20,7 +21,7 @@
 
 (setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
-;; clean *scratch*, no more startup screen
+;; clean *scratch*, no more startup screen.
 
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
@@ -86,6 +87,12 @@
 
 
 
+;; Extra help
+
+(require 'help+)
+(require 'help-fns+)
+(require 'help-mode+)
+
 ;; Add line numbers to programming buffers, highlight indentation and
 ;; colorize their colour codes.
 
@@ -108,9 +115,9 @@
 (ido-mode)
 
 (add-hook 'ido-setup-hook 'ido-my-keys)
-
 (defun ido-my-keys ()
-  (define-key ido-completion-map (kbd "TAB") 'ido-next-match))
+  (define-key ido-completion-map (kbd "TAB") 'ido-next-match)
+  (define-key ido-completion-map [S-iso-lefttab] 'ido-prev-match))
 
 (flx-ido-mode)
 (ido-ubiquitous-mode)
@@ -176,8 +183,7 @@
 ;; Set auto-mode-alist for various modes and autload others
 
 (setq auto-mode-alist
-   (append '(("\\.vimperatorrc\\'" . vimrc-mode)
-	     ("\\.h\\'" . c++-mode)
+   (append '(("\\.h\\'" . c++-mode)
 	     ("\\.rkt\\'" . scheme-mode)
 	     ("\\.pl\\'" . prolog-mode)) auto-mode-alist))
 
@@ -189,14 +195,36 @@
 (add-to-list 'load-path "~/.emacs.d/powerline/")
 (require 'powerline)
 (powerline-evil-theme)
+(setq evil-emacs-state-tag " E "
+      evil-normal-state-tag " N "
+      evil-insert-state-tag " I "
+      evil-visual-state-tag " V "
+      evil-motion-state-tag " M "
+      evil-replace-state-tag " R "
+      evil-operator-state-tag " O ")
+
+; Evil modes
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
+
+(delete 'ibuffer-mode evil-emacs-state-modes)
+(evil-define-key 'normal ibuffer-mode-map
+  "J" 'ibuffer-jump-to-buffer)
+
+(evil-make-overriding-map package-menu-mode-map 'normal)
+(evil-define-key 'normal package-menu-mode-map
+  "n" 'evil-search-next)
+(delete 'package-menu-mode evil-emacs-state-modes)
+
+
+; Evil keys
 
 (define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
 (define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
 ;; (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+(define-key evil-normal-state-map (kbd "U") 'undo-tree-visualize)
 
 (define-key evil-normal-state-map (kbd "<S-return>")
   (lambda () (interactive)
@@ -225,12 +253,13 @@
 ;;     (evil-insert 1)))
 
 (key-chord-mode 1)
-(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+(key-chord-define evil-insert-state-map  "jj" 'evil-normal-state)
+(key-chord-define evil-replace-state-map "jj" 'evil-normal-state)
 
 ;; Custom keybindings!
 
 (global-set-key "\M-9" 'insert-parentheses)
-(global-set-key "\M-8" (lambda () (interactive) (insert "*")))
+(global-set-key "\M-8" "*")
 
 (global-set-key (kbd "C-0") 'delete-window)
 (global-set-key (kbd "C-1") 'delete-other-windows)
@@ -260,8 +289,7 @@ This is the same as using \\[set-mark-command] with the prefix argument."
   "Pushes `point' to `mark-ring' and does not activate the region
 Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
   (interactive)
-  (push-mark (point) t nil)
-  (message "Pushed mark to ring"))
+  (push-mark))
 (global-set-key (kbd "M-`") 'jump-to-mark)
 (global-set-key (kbd "C-'") 'push-mark-no-activate)
 
@@ -278,7 +306,6 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-cross-lines t)
- '(evil-move-cursor-back nil)
  '(evil-shift-width 2)
  '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
  '(prolog-indent-width 2)
