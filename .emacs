@@ -1,7 +1,6 @@
 ;; start the emacs server
 
 (server-start)
-(desktop-save-mode)
 (package-initialize)
 
 ;; no menu-bar, toolbar or scroll bar
@@ -105,6 +104,10 @@
 (eval-after-load 'rainbow-mode '(diminish 'rainbow-mode))
 (eval-after-load 'indent-guide '(diminish 'indent-guide-mode))
 
+;; Modify emacs-lisp-mode to accept - as part of a word
+
+(modify-syntax-entry ?- "w" emacs-lisp-mode-syntax-table)
+
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
 (global-undo-tree-mode)
@@ -203,9 +206,12 @@
       evil-replace-state-tag " R "
       evil-operator-state-tag " O ")
 
+(setq evil-symbol-word-search t)
+
 ; Evil modes
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
+(add-to-list 'evil-insert-state-modes 'idris-repl-mode)
 
 (delete 'ibuffer-mode evil-emacs-state-modes)
 (evil-define-key 'normal ibuffer-mode-map
@@ -308,6 +314,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  '(evil-cross-lines t)
  '(evil-shift-width 2)
  '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
+ '(idris-interpreter-path "~/.cabal/bin/idris")
  '(prolog-indent-width 2)
  '(prolog-system (quote swi))
  '(recenter-positions (quote (bottom middle top)))

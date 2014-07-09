@@ -28,9 +28,7 @@ import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace,
                                           tagToEmptyWorkspace)
 -------------------------------------------------- Windows
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook,
-                                 isUnfocused, isFloating, opacity, opaque)
-import XMonad.Hooks.InsertPosition (insertPosition,
-                                    Position(End, Above), Focus(Newer))
+                                 isUnfocused, opacity, opaque)
 import XMonad.ManageHook (doFloat)
 import XMonad.Hooks.Place (placeHook, smart)
 
@@ -125,11 +123,8 @@ main = do
       handleEventHook = fadeWindowsEventHook,
 
       -- Construct new windows behind older ones
-      manageHook = --insertPosition End Newer <>
-                   composeAll
-                     [ -- not <$> isFloating       --> insertPosition End Newer
-                       -- insertPosition Above Newer
-                       className  =? "MPlayer"     --> doFloat
+      manageHook = composeAll
+                     [ className  =? "MPlayer"     --> doFloat
                      , className  =? "Gimp"        --> doFloat
 
                      , className  =? "FTL"         --> placeHook (smart (0.5, 0.5))
