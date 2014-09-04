@@ -8,6 +8,7 @@ bindkey ';5D' emacs-backward-word
 alias ls='ls --color=auto'
 alias la='ls -lAh'
 alias ll='ls -lh'
+alias lat='ls -lAht'
 alias lag='ls -lAh | grep'
 alias pag='ps -A   | grep'
 

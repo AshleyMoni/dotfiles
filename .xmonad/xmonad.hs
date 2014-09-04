@@ -33,7 +33,7 @@ import XMonad.ManageHook (doFloat)
 import XMonad.Hooks.Place (placeHook, smart)
 
 import XMonad.Layout.NoBorders (noBorders)
-import XMonad.Layout.Spacing (smartSpacing)
+-- import XMonad.Layout.Spacing (smartSpacing)
 -------------------------------------------------- Dzen
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Hooks.UrgencyHook (withUrgencyHook, NoUrgencyHook(..))
@@ -116,7 +116,7 @@ main = do
       startupHook = setDefaultCursor xC_left_ptr,
 
       -- Remove borders, don't overlap with dzen, space windows apart
-      layoutHook = smartSpacing 6 . avoidStruts . noBorders
+      layoutHook = avoidStruts . noBorders -- smartSpacing 6 .
                    $ layoutHook defaultConfig,
 
       -- Reapply transparency rules on any X events
@@ -165,7 +165,7 @@ main = do
                        onLeftClick "super+space" .
 
                        renderImage . (dzenDir' ++) .
-                       (\x -> case drop 2 $ words x of -- Drop layouthook prefix
+                       (\x -> case words x of -- Drop layouthook prefix
                                 ["Tall"]           -> "tall.xbm"
                                 ["Mirror", "Tall"] -> "mtall.xbm"
                                 ["Full"]           -> "full.xbm"

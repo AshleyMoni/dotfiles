@@ -18,7 +18,8 @@
 
 ;; Window title for topbar.
 
-(setq frame-title-format '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+(setq frame-title-format
+  '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; clean *scratch*, no more startup screen.
 
@@ -190,6 +191,11 @@
 	     ("\\.rkt\\'" . scheme-mode)
 	     ("\\.pl\\'" . prolog-mode)) auto-mode-alist))
 
+;; Set up haskell-mode
+
+(add-hook 'haskell-mode-hook 'haskell-simple-indent-mode)
+(add-hook 'haskell-mode-hook 'inf-haskell-mode)
+
 ;; Evil mode and powerline to go with it
 
 (evil-mode)
@@ -313,7 +319,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If there is more than one, they won't work right.
  '(evil-cross-lines t)
  '(evil-shift-width 2)
- '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
+ ;; '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
  '(idris-interpreter-path "~/.cabal/bin/idris")
  '(prolog-indent-width 2)
  '(prolog-system (quote swi))
@@ -324,6 +330,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(idris-loaded-region-face ((t (:background "black"))))
  '(linum ((t (:inherit (shadow default) :foreground "dim gray"))))
  '(mode-line ((t (:background "grey75" :foreground "black"))))
  '(mode-line-highlight ((t nil)))
