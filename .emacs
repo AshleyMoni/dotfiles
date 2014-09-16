@@ -1,3 +1,7 @@
+;; save / load emacs sessions
+
+(desktop-save-mode)
+
 ;; start the emacs server
 
 (server-start)
@@ -145,8 +149,8 @@
 ;; Configure package archives
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")
-			 ("marmalade" . "http://marmalade-repo.org/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
 
 ;; Sublime emulation
 
@@ -174,6 +178,7 @@
 
 (set-register ?e '(file . "~/.emacs"))
 (set-register ?g '(file . "~/.ghci"))
+(set-register ?o '(file . "~/.ocamlinit"))
 (set-register ?m '(file . "~/.xmonad/xmonad.hs"))
 (set-register ?b '(file . "~/.bashrc"))
 (set-register ?c '(file . "~/.xmonad/.conky_dzen"))
@@ -188,8 +193,9 @@
 
 (setq auto-mode-alist
    (append '(("\\.h\\'" . c++-mode)
-	     ("\\.rkt\\'" . scheme-mode)
-	     ("\\.pl\\'" . prolog-mode)) auto-mode-alist))
+             ("\\.rkt\\'" . scheme-mode)
+             ("\\.pl\\'" . prolog-mode)
+             ("\\.ocamlinit\\'" . tuareg-mode)) auto-mode-alist))
 
 ;; Set up haskell-mode
 
@@ -218,6 +224,7 @@
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
 (add-to-list 'evil-insert-state-modes 'idris-repl-mode)
+(add-to-list 'evil-insert-state-modes 'tuareg-interactive-mode)
 
 (delete 'ibuffer-mode evil-emacs-state-modes)
 (evil-define-key 'normal ibuffer-mode-map
@@ -305,8 +312,8 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
 (global-set-key (kbd "M-`") 'jump-to-mark)
 (global-set-key (kbd "C-'") 'push-mark-no-activate)
 
-(defun kill-this-buffer () 
-  (interactive) 
+(defun kill-this-buffer ()
+  (interactive)
   (kill-buffer (current-buffer)))
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 
