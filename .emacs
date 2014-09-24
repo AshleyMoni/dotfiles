@@ -128,9 +128,9 @@
   (define-key ido-completion-map [S-iso-lefttab] 'ido-prev-match))
 
 (flx-ido-mode)
-(ido-ubiquitous-mode)
 (ido-vertical-mode)
-(ido-at-point-mode)
+(ido-ubiquitous-mode)
+;(ido-at-point-mode)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -195,6 +195,7 @@
    (append '(("\\.h\\'" . c++-mode)
              ("\\.rkt\\'" . scheme-mode)
              ("\\.pl\\'" . prolog-mode)
+             ("\\.service\\'" . conf-mode)
              ("\\.ocamlinit\\'" . tuareg-mode)) auto-mode-alist))
 
 ;; Set up haskell-mode
@@ -231,9 +232,9 @@
   "J" 'ibuffer-jump-to-buffer)
 
 (evil-make-overriding-map package-menu-mode-map 'normal)
+(delete 'package-menu-mode evil-emacs-state-modes)
 (evil-define-key 'normal package-menu-mode-map
   "n" 'evil-search-next)
-(delete 'package-menu-mode evil-emacs-state-modes)
 
 
 ; Evil keys
@@ -244,6 +245,9 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
 ;; (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
 (define-key evil-normal-state-map (kbd "U") 'undo-tree-visualize)
+
+(define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-page-down)
+(define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-page-up)
 
 (define-key evil-normal-state-map (kbd "<S-return>")
   (lambda () (interactive)
@@ -272,8 +276,8 @@
 ;;     (evil-insert 1)))
 
 (key-chord-mode 1)
-(key-chord-define evil-insert-state-map  "jj" 'evil-normal-state)
-(key-chord-define evil-replace-state-map "jj" 'evil-normal-state)
+(key-chord-define evil-insert-state-map  "dj" 'evil-normal-state)
+(key-chord-define evil-replace-state-map "dj" 'evil-normal-state)
 
 ;; Custom keybindings!
 
