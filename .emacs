@@ -30,7 +30,7 @@
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
 
-;; truncate lines and make column numbers visible
+;; truncate lines
 
 (setq truncate-partial-width-windows t)
 
@@ -56,7 +56,7 @@
 (show-paren-mode t)
 (setq show-paren-style 'expression)
 
-;; delete-selection-mode
+;; Delete selected text on typing
 
 (delete-selection-mode)
 
@@ -100,23 +100,26 @@
 ;; Add line numbers to programming buffers, highlight indentation and
 ;; colorize their colour codes.
 
-(require 'indent-guide)
+;; (require 'indent-guide)
 
 (add-hook 'prog-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'indent-guide-mode)
+;; (add-hook 'prog-mode-hook 'indent-guide-mode)
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
 (eval-after-load 'rainbow-mode '(diminish 'rainbow-mode))
 (eval-after-load 'indent-guide '(diminish 'indent-guide-mode))
 
-;; Modify emacs-lisp-mode to accept - as part of a word
-
-(modify-syntax-entry ?- "w" emacs-lisp-mode-syntax-table)
+;;;; Modify emacs-lisp-mode to accept - as part of a word
+;; (modify-syntax-entry ?- "w" emacs-lisp-mode-syntax-table)
 
 ;; Undo-tree mode, make it global, diminish it from modelines.
 
 (global-undo-tree-mode)
 (diminish 'undo-tree-mode)
+
+;; Auctex
+
+(set-default 'preview-scale-function 1.2)
 
 ;; Ido mode and all associated paraphernalia
 
@@ -130,7 +133,7 @@
 (flx-ido-mode)
 (ido-vertical-mode)
 (ido-ubiquitous-mode)
-;(ido-at-point-mode)
+(ido-at-point-mode)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -143,36 +146,19 @@
 (global-set-key (kbd "C-c M-x") 'execute-extended-command)
 
 (setq smex-prompt-string ">>= ")
-;(setq smex-auto-update nil)
-;(smex-auto-update 60)
 
 ;; Configure package archives
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+(setq package-archives '(("elpa" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
 
-;; Sublime emulation
+(define-key package-menu-mode-map "/" 'evil-search-forward)
+(define-key package-menu-mode-map "n" 'evil-search-next)
+(define-key package-menu-mode-map "N" 'evil-search-previous)
 
-;(require 'sublimity)
-;(require 'sublimity-map)
-
-;(setq sublimity-map-size 20)
-;(setq sublimity-map-fraction 0.3)
-;(setq sublimity-map-text-scale -7)
-;(sublimity-map-set-delay nil)
-
-;(sublimity-mode)
-
-;; Structured-Haskell-Mode
-
-;(add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
-;(setq shm-program-name "/home/ashley/.cabal/bin/structured-haskell-mode")
-;(require 'shm)
-
-;(add-hook 'haskell-mode-hook 'structured-haskell-mode)
-
-
+(define-key package-menu-mode-map "j" 'next-line)
+(define-key package-menu-mode-map "k" 'previous-line)
 
 ;; Registers!
 
@@ -200,13 +186,63 @@
 
 ;; Set up haskell-mode
 
-(add-hook 'haskell-mode-hook 'haskell-simple-indent-mode)
-(add-hook 'haskell-mode-hook 'inf-haskell-mode)
+;; (eval-after-load "haskell-mode"
+;;   '(progn (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+;;           (add-hook 'haskell-mode-hook 'inf-haskell-mode)
+;;           (diminish 'haskell-indentation-mode)
+;;           (diminish 'inf-haskell-mode)))
 
-;; Evil mode and powerline to go with it
+;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+(add-hook 'flycheck-mode-hook 'flycheck-haskell-setup)
+
+(setq haskell-tags-on-save t)
+
+;; Ibuffer
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(eval-after-load "ibuffer"
+  '(progn (define-key ibuffer-mode-map "j" 'ibuffer-forward-line)
+          (define-key ibuffer-mode-map "k" 'ibuffer-backward-line)
+          (define-key ibuffer-mode-map "J" 'ibuffer-jump-to-buffer)
+          (define-key ibuffer-mode-map "n" 'ido-switch-buffer)
+          (define-key ibuffer-mode-map (kbd "C-k") 'ido-switch-buffer)
+
+          (define-key ibuffer-mode-map (kbd "C-x C-f") 'ido-find-file)
+          (define-key ibuffer-mode-map (kbd "C-x b") 'ido-switch-buffer)))
+
+;; Magit
+
+(eval-after-load "magit"
+  '(progn
+     (define-key magit-status-mode-map "j" 'magit-goto-next-section)
+     (define-key magit-status-mode-map "k" 'magit-goto-previous-section)
+     (define-key magit-status-mode-map "n" 'magit-section-jump-map)
+     (define-key magit-status-mode-map "p" 'magit-discard-item)
+
+     (define-key magit-log-mode-map "j" 'magit-goto-next-section)
+     (define-key magit-log-mode-map "k" 'magit-goto-previous-section)))
+
+;; Flycheck
+
+(global-flycheck-mode)
+
+(eval-after-load "flycheck"
+  '(progn
+     (define-key flycheck-error-list-mode-map "j" 'flycheck-error-list-next-error)
+     (define-key flycheck-error-list-mode-map "k" 'flycheck-error-list-previous-error)))
+
+(defun flycheck-status ()
+  (interactive)
+  (flycheck-list-errors)
+  (other-window 1))
+
+;;;;; Evil mode, extensions and powerline to go with it
 
 (evil-mode)
-(global-surround-mode)
+(global-evil-surround-mode)
+(evilnc-default-hotkeys)
 
 (add-to-list 'load-path "~/.emacs.d/powerline/")
 (require 'powerline)
@@ -221,33 +257,46 @@
 
 (setq evil-symbol-word-search t)
 
-; Evil modes
+;; Evil modes
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
 (add-to-list 'evil-insert-state-modes 'idris-repl-mode)
 (add-to-list 'evil-insert-state-modes 'tuareg-interactive-mode)
+(add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
-(delete 'ibuffer-mode evil-emacs-state-modes)
-(evil-define-key 'normal ibuffer-mode-map
-  "J" 'ibuffer-jump-to-buffer)
+;; (delete 'ibuffer-mode evil-emacs-state-modes)
+;; (evil-define-key 'normal ibuffer-mode-map
+;;   "J" 'ibuffer-jump-to-buffer)
 
-(evil-make-overriding-map package-menu-mode-map 'normal)
-(delete 'package-menu-mode evil-emacs-state-modes)
-(evil-define-key 'normal package-menu-mode-map
-  "n" 'evil-search-next)
+;; (evil-make-overriding-map package-menu-mode-map 'normal)
+;; (delete 'package-menu-mode evil-emacs-state-modes)
 
+;; Evil keys
 
-; Evil keys
+;; (define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
+;; (define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
 
-(define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
-(define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
-;; (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+
+(define-key evil-normal-state-map (kbd ",m") 'magit-status)
+(define-key evil-normal-state-map (kbd ",g") 'magit-status)
+(define-key evil-normal-state-map (kbd ",f") 'flycheck-status)
+(define-key evil-normal-state-map (kbd ",F") 'flycheck-previous-error)
+
+(defun diff-this-buffer-with-file ()
+  (interactive)
+  (diff-buffer-with-file (current-buffer)))
+
+(define-key evil-normal-state-map (kbd ",?") 'diff-this-buffer-with-file)
+
 (define-key evil-normal-state-map (kbd "U") 'undo-tree-visualize)
+
 
 (define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-page-down)
 (define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-page-up)
+
+;; (define-key evil-normal-state-map (kbd "C-b") 'ibuffer)
 
 (define-key evil-normal-state-map (kbd "<S-return>")
   (lambda () (interactive)
@@ -270,16 +319,12 @@
 (define-key evil-normal-state-map (kbd "gl") 'evil-ace-jump-line-mode)
 (define-key evil-motion-state-map (kbd "gl") 'evil-ace-jump-line-mode)
 
-;; (define-key evil-normal-state-map (kbd "SPC")
-;;   (lambda () (interactive)
-;;     (insert " ")
-;;     (evil-insert 1)))
-
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map  "dj" 'evil-normal-state)
 (key-chord-define evil-replace-state-map "dj" 'evil-normal-state)
 
-;; Custom keybindings!
+
+;;;;;; Custom keybindings!
 
 (global-set-key "\M-9" 'insert-parentheses)
 (global-set-key "\M-8" "*")
@@ -300,8 +345,6 @@
 
 (global-set-key [M-right] 'next-buffer)
 (global-set-key [M-left] 'previous-buffer)
-
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (defun jump-to-mark ()
   "Jumps to the local mark, respecting the `mark-ring' order.
@@ -330,7 +373,6 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If there is more than one, they won't work right.
  '(evil-cross-lines t)
  '(evil-shift-width 2)
- ;; '(haskell-mode-hook (quote (turn-on-haskell-simple-indent)))
  '(idris-interpreter-path "~/.cabal/bin/idris")
  '(prolog-indent-width 2)
  '(prolog-system (quote swi))
@@ -354,3 +396,23 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  '(shm-current-face ((t (:background "gray20"))))
  '(shm-quarantine-face ((t (:background "black"))))
  '(show-paren-match ((t (:background "gray20")))))
+
+;; Sublime emulation
+
+;(require 'sublimity)
+;(require 'sublimity-map)
+
+;(setq sublimity-map-size 20)
+;(setq sublimity-map-fraction 0.3)
+;(setq sublimity-map-text-scale -7)
+;(sublimity-map-set-delay nil)
+
+;(sublimity-mode)
+
+;; Structured-Haskell-Mode
+
+;(add-to-list 'load-path "~/Programming/Haskell/structured-haskell-mode/elisp")
+;(setq shm-program-name "/home/ashley/.cabal/bin/structured-haskell-mode")
+;(require 'shm)
+
+;(add-hook 'haskell-mode-hook 'structured-haskell-mode)

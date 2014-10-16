@@ -22,5 +22,6 @@ set defsearch=g
 
 set hintchars="abcdefghijklmnoprstuvwxyz"
 set gui=noaddons,nobookmarks,nomenu,nonavigation,tabs
+set focuscontent=true
 
 highlight Hint::after -append font-size: 10pt

@@ -57,19 +57,24 @@ import System.Environment (getEnv)
 
 ------- Config variables:
 
+font, foreground, background :: String
+
 font = "-*-terminus-medium-*-normal-*-12-*-*-*-*-*-*-*"
 
 foreground = "#ffa500"
 background = "#000000"
 
 -- Files from dzen directory to surround dzen workspace entries with:
+workspaceBraces :: (String, String)
 workspaceBraces = ("side_l.xbm", "side_r.xbm")
 
+workspaceTags :: [String]
 workspaceTags = ["main", "chat", "code", "shell",
                  "v", "vi", "vii", "viii", "ix", "x"]
 
 ---- Locations
--- $HOME will be automatically prepended to all these locations.
+
+conkyFile, dzenDir :: String -- $HOME will be automatically prepended to these
 
 conkyFile = "/.xmonad/.conky_dzen" -- Location of conky file for right bar
 dzenDir   = "/.xmonad/dzen2/"      -- Location of dzen files for the left bar
@@ -77,6 +82,7 @@ dzenDir   = "/.xmonad/dzen2/"      -- Location of dzen files for the left bar
 
 -------- XMonad
 
+main :: IO ()
 main = do
   home <- getEnv "HOME"
 
@@ -127,7 +133,8 @@ main = do
                      [ className  =? "MPlayer"     --> doFloat
                      , className  =? "Gimp"        --> doFloat
 
-                     , className  =? "FTL"         --> placeHook (smart (0.5, 0.5))
+                     , (className =? "FTL" <||>
+                        className =? "brogue")     --> placeHook (smart (0.5, 0.5))
 
                      , (className =? "Firefox" <||>
                         className =? "dota_linux") --> doShift "main"
@@ -209,7 +216,8 @@ main = do
                    ++ "killall conky && "
                    ++ "killall dzen2 && "
                    ++ "xmonad --restart"),
-      ("M-S-q", safeSpawn "/usr/bin/systemctl" ["poweroff"]) ]
+      -- ("M-S-q", safeSpawn "/usr/bin/systemctl" ["poweroff"]) ]
+      ("M-S-q", spawn "systemctl poweroff") ]
 
     `additionalKeys`
 
@@ -234,12 +242,15 @@ workspaceFormat dzen fg bg = wrap left right
 -- Add on-click functionality. Requires and uses the 'xdotool' package
 xdotool :: Int -> String -> String -> String
 xdotool n key = wrap left right
-  where left  = "^ca(" ++ (show n) ++ ",xdotool key " ++ key ++ ")"
+  where left  = "^ca(" ++ show n ++ ",xdotool key " ++ key ++ ")"
         right = "^ca()"
+
+onLeftClick, onMiddleClick         :: String -> String -> String
+onScrollWheelUp, onScrollWheelDown :: String -> String -> String
 
 onLeftClick   = xdotool 1
 onMiddleClick = xdotool 2
-onRightClick  = xdotool 3
+-- onRightClick  = xdotool 3    (Not used)
 onScrollWheelUp   = xdotool 4
 onScrollWheelDown = xdotool 5
 
@@ -251,7 +262,7 @@ clickable tag = case elemIndex tag workspaceTags of
 
 -- Prepend an image symbol to a workspace name
 addGlyph :: String -> String -> String -> String
-addGlyph dzen glyph = (++ " " ++ (renderImage $ dzen ++ glyph))
+addGlyph dzen glyph = (++ " " ++ renderImage (dzen ++ glyph))
 
 -- Format an image filepath to tell dzen to render it.
 renderImage :: String -> String

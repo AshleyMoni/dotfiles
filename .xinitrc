@@ -42,8 +42,8 @@ redshift &
 # Remove the mouse after lack of use
 unclutter -root -grab &
 
-# # Starts emacs server
-# emacs --daemon &
+# Starts emacs server
+emacs --daemon &
 
 
 # Run Xmonad
