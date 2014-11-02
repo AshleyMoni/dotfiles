@@ -13,17 +13,10 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; color theme and transparency... and remove vertical borders
-
-(add-to-list 'default-frame-alist '(foreground-color . "gray"))
-(add-to-list 'default-frame-alist '(background-color . "gray10"))
-(add-to-list 'default-frame-alist '(cursor-color . "white"))
-(set-face-foreground 'vertical-border "gray10")
-
 ;; Window title for topbar.
 
-(setq frame-title-format
-  '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+;; (setq frame-title-format
+;;   '("xi: " (buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; clean *scratch*, no more startup screen.
 
@@ -222,7 +215,9 @@
      (define-key magit-status-mode-map "p" 'magit-discard-item)
 
      (define-key magit-log-mode-map "j" 'magit-goto-next-section)
-     (define-key magit-log-mode-map "k" 'magit-goto-previous-section)))
+     (define-key magit-log-mode-map "k" 'magit-goto-previous-section)
+
+     (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)))
 
 ;; Flycheck
 
@@ -257,7 +252,7 @@
 
 (setq evil-symbol-word-search t)
 
-;; Evil modes
+;;;; Evil modes
 
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
 (add-to-list 'evil-insert-state-modes 'idris-repl-mode)
@@ -271,7 +266,9 @@
 ;; (evil-make-overriding-map package-menu-mode-map 'normal)
 ;; (delete 'package-menu-mode evil-emacs-state-modes)
 
-;; Evil keys
+;;;; Evil keys
+
+(define-key evil-normal-state-map (kbd "s") 'evil-surround-edit)
 
 ;; (define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
 ;; (define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
@@ -310,13 +307,8 @@
 
 (setq evil-ace-jump-active t)
 
-(define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-word-mode)
 (define-key evil-motion-state-map (kbd "SPC") 'evil-ace-jump-word-mode)
-
-(define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-char-mode)
 (define-key evil-motion-state-map (kbd "C-SPC") 'evil-ace-jump-char-mode)
-
-(define-key evil-normal-state-map (kbd "gl") 'evil-ace-jump-line-mode)
 (define-key evil-motion-state-map (kbd "gl") 'evil-ace-jump-line-mode)
 
 (key-chord-mode 1)
@@ -383,6 +375,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "gray10" :foreground "gray" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "xos4" :family "Terminus"))))
  '(idris-loaded-region-face ((t (:background "black"))))
  '(linum ((t (:inherit (shadow default) :foreground "dim gray"))))
  '(mode-line ((t (:background "grey75" :foreground "black"))))
@@ -393,9 +386,10 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  '(powerline-active3 ((t (:inherit mode-line :background "gray30" :foreground "white"))))
  '(powerline-inactive1 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
  '(powerline-inactive2 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
- '(shm-current-face ((t (:background "gray20"))))
- '(shm-quarantine-face ((t (:background "black"))))
- '(show-paren-match ((t (:background "gray20")))))
+ '(shm-current-face ((t (:background "gray20"))) t)
+ '(shm-quarantine-face ((t (:background "black"))) t)
+ '(show-paren-match ((t (:background "gray20"))))
+ '(vertical-border ((t (:foreground "gray10")))))
 
 ;; Sublime emulation
 

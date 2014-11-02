@@ -19,18 +19,18 @@ alias unzip='7za x'
 
 alias skype="PULSE_LATENCY_MSEC=30 skype"
 
-# Aura aliases
+# # Aura aliases
 
-alias sas='sudo aura -S'
+# alias sas='sudo aura -S'
 
-alias auss='aura -Ss'
-alias ausi='aura -Si'
+# alias auss='aura -Ss'
+# alias ausi='aura -Si'
 
-alias sasy='sudo aura -Sy'
-alias sasyu='sudo aura -Syu'
+# alias sasy='sudo aura -Sy'
+# alias sasyu='sudo aura -Syu'
 
-alias sar='sudo aura -R'
-alias sars='sudo aura -Rs'
+# alias sar='sudo aura -R'
+# alias sars='sudo aura -Rs'
 
 ## Set up envoy for ssh
 

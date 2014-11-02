@@ -62,7 +62,7 @@ font, foreground, background :: String
 font = "-*-terminus-medium-*-normal-*-12-*-*-*-*-*-*-*"
 
 foreground = "#ffa500"
-background = "#000000"
+background = "#1a1a1a"
 
 -- Files from dzen directory to surround dzen workspace entries with:
 workspaceBraces :: (String, String)
@@ -103,7 +103,7 @@ main = do
   let dzenDir' = home ++ dzenDir
       -- Curried pure functions, using the dzen directory path
       wrappedIn = workspaceFormat dzenDir'
-      withGlyph = addGlyph        dzenDir'
+      -- withGlyph = addGlyph        dzenDir'
 
   xmonad . withUrgencyHook NoUrgencyHook
          . ewmh
@@ -132,6 +132,7 @@ main = do
       manageHook = composeAll
                      [ className  =? "MPlayer"     --> doFloat
                      , className  =? "Gimp"        --> doFloat
+                     , className  =? "Ediff"       --> doFloat
 
                      , (className =? "FTL" <||>
                         className =? "brogue")     --> placeHook (smart (0.5, 0.5))
@@ -161,10 +162,10 @@ main = do
         dynamicLogWithPP $ dzenPP
           { ppWsSep  = ""
           , ppCurrent         = "#000000" `wrappedIn` "#ffa500"
-          , ppHidden          = clickable <*> ("#dcdcdc" `wrappedIn` "#1a1a1a")
-          , ppHiddenNoWindows = clickable <*> ("#404040" `wrappedIn` "#1a1a1a")
-          , ppUrgent          = clickable <*> ("#000000" `wrappedIn` "#ff4500")
-                                . withGlyph "notice.xbm"
+          , ppHidden          = clickable <*> ("#dcdcdc" `wrappedIn` "#262626")
+          , ppHiddenNoWindows = clickable <*> ("#4d4d4d" `wrappedIn` "#262626")
+          , ppUrgent          = clickable <*> ("#262626" `wrappedIn` "#ff4500")
+                                -- . withGlyph "notice.xbm"
 
           , ppSep    = "  "
 
