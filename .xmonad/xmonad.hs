@@ -48,8 +48,6 @@ import XMonad.Util.EZConfig (additionalKeysP, additionalKeys)
 
 import XMonad.ManageHook (composeAll, className, (--> -- Github thinks this is a comment
                           ), (=?), (<||>), (<&&>))    -- so we need to shift ) to match
-import Data.Functor ((<$>))
-import Control.Applicative ((<*>))
 import Data.List (elemIndex)
 
 import System.IO (hPutStrLn)
@@ -142,6 +140,7 @@ main = do
                      , (className =? "Xchat"   <||>
                         className =? "Hexchat" <||>
                         title     =? "Friends")    --> doShift "chat"
+                     , className  =? "emacs"       --> doShift "code"
                      , title      =? "Steam"       --> doShift "ix"
                      , className  =? "Exaile"      --> doShift "x" ],
 
@@ -156,7 +155,8 @@ main = do
 
           , (className =? "Emacs"  <||>
              className =? "Sakura" <||>
-             className =? "Xchat"  <||> className =? "Hexchat")
+             className =? "Xchat"  <||>
+             className =? "Hexchat")
             <&&> not <$> isUnfocused --> opacity 0.95 ]
 
         dynamicLogWithPP $ dzenPP
@@ -212,6 +212,7 @@ main = do
       ("M-`",   viewEmptyWorkspace),
       ("M-S-`", tagToEmptyWorkspace),
 
+      ("M-f", spawn "killall firefox && firefox"),
       ("M-p", safeSpawn "/home/ashley/bin/navi-menu" []), -- Personal dmenu
       ("M-q", spawn $ "xmonad --recompile && "
                    ++ "killall conky && "
@@ -257,13 +258,13 @@ onScrollWheelDown = xdotool 5
 
 clickable :: String -> String -> String
 clickable tag = case elemIndex tag workspaceTags of
-                    Just 9  -> onLeftClick $ "super+0"
+                    Just 9  -> onLeftClick   "super+0"
                     Just n  -> onLeftClick $ "super+" ++ show (n + 1)
                     Nothing -> id
 
--- Prepend an image symbol to a workspace name
-addGlyph :: String -> String -> String -> String
-addGlyph dzen glyph = (++ " " ++ renderImage (dzen ++ glyph))
+-- -- Prepend an image symbol to a workspace name
+-- addGlyph :: String -> String -> String -> String
+-- addGlyph dzen glyph = (++ " " ++ renderImage (dzen ++ glyph))
 
 -- Format an image filepath to tell dzen to render it.
 renderImage :: String -> String

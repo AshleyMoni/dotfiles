@@ -16,7 +16,7 @@ fi
 # export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 # feh
-eval $(cat ~/.fehbg)
+~/.fehbg
 
 # Compositing
 compton -b --config ~/.comptonrc
@@ -35,6 +35,8 @@ numlockx &
 # Load cursor before xmonad
 xrdb ~/.Xresources &
 
+# Inform java that we're using a tiling WM
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Redshift
 redshift &

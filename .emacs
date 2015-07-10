@@ -1,6 +1,7 @@
 ;; save / load emacs sessions
 
 (desktop-save-mode)
+(add-hook 'desktop-after-read-hook 'powerline-reset)
 
 ;; start the emacs server
 
@@ -95,7 +96,7 @@
 
 ;; (require 'indent-guide)
 
-(add-hook 'prog-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'nlinum-mode)
 ;; (add-hook 'prog-mode-hook 'indent-guide-mode)
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
@@ -213,11 +214,46 @@
      (define-key magit-status-mode-map "k" 'magit-goto-previous-section)
      (define-key magit-status-mode-map "n" 'magit-section-jump-map)
      (define-key magit-status-mode-map "p" 'magit-discard-item)
+     (define-key magit-status-mode-map (kbd "C-k") 'magit-discard-item)
 
      (define-key magit-log-mode-map "j" 'magit-goto-next-section)
      (define-key magit-log-mode-map "k" 'magit-goto-previous-section)
 
-     (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)))
+     (define-key magit-commit-mode-map "j" 'magit-goto-next-section)
+     (define-key magit-commit-mode-map "k" 'magit-goto-previous-section)
+     (define-key magit-commit-mode-map "n" 'magit-jump-to-diffstats)
+
+     ;; (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
+     ;; (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
+     ))
+
+;; ARFF mode definition for working with weka
+
+(require 'generic)
+(define-generic-mode 'arff-file-mode
+  (list ?%)
+  (list "attribute" "relation" "end" "data")
+  '(("\\('.*'\\)" 1 'font-lock-string-face)
+    ("^\\@\\S-*\\s-\\(\\S-*\\)" 1 'font-lock-string-face)
+    ("^\\@.*\\(real\\)" 1 'font-lock-type-face)
+    ("^\\@.*\\(integer\\)" 1 'font-lock-type-face)
+    ("^\\@.*\\(numeric\\)" 1 'font-lock-type-face)
+    ("^\\@.*\\(string\\)" 1 'font-lock-type-face)
+    ("^\\@.*\\(date\\)" 1 'font-lock-type-face)
+    ("^\\@.*\\({.*}\\)" 1 'font-lock-type-face)
+    ("^\\({\\).*\\(}\\)$" (1 'font-lock-reference-face) (2 'font-lock-reference-face))
+    ("\\(\\?\\)" 1 'font-lock-reference-face)
+    ("\\(\\,\\)" 1 'font-lock-keyword-face)
+    ("\\(-?[0-9]+?.?[0-9]+\\)" 1 'font-lock-constant-face)
+    ("\\(\\@\\)" 1 'font-lock-preprocessor-face))
+  (list "\.arff?")
+  (list
+   (function
+    (lambda ()
+      (setq font-lock-defaults (list 'generic-font-lock-defaults nil t ; case insensitive
+                                     (list (cons ?* "w") (cons ?- "w"))))
+      (turn-on-font-lock))))
+  "Mode for arff-files.")
 
 ;; Flycheck
 
@@ -266,15 +302,19 @@
 ;; (evil-make-overriding-map package-menu-mode-map 'normal)
 ;; (delete 'package-menu-mode evil-emacs-state-modes)
 
-;;;; Evil keys
+;;;; Evil keys and functions
 
-(define-key evil-normal-state-map (kbd "s") 'evil-surround-edit)
+;; Flippping i and a
+
+;; (define-key evil-normal-state-map (kbd "s") 'evil-surround-edit)
+
+;; (define-key evil-motion-state-map [S-iso-lefttab] 'evil-jump-backward)
 
 ;; (define-key evil-normal-state-map (kbd "gf") 'ido-find-file)
 ;; (define-key evil-normal-state-map (kbd "gb") 'ido-switch-buffer)
 
-(define-key evil-normal-state-map (kbd "C-j") 'evil-scroll-page-down)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-scroll-page-up)
+(define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-page-down)
+(define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-page-up)
 
 (define-key evil-normal-state-map (kbd ",m") 'magit-status)
 (define-key evil-normal-state-map (kbd ",g") 'magit-status)
@@ -296,13 +336,13 @@
 ;; (define-key evil-normal-state-map (kbd "C-b") 'ibuffer)
 
 (define-key evil-normal-state-map (kbd "<S-return>")
-  (lambda () (interactive)
-    (evil-open-above 1)
+  (lambda (&optional arg) (interactive "P")
+    (evil-open-above arg)
     (evil-normal-state)))
 
 (define-key evil-normal-state-map (kbd "RET")
-  (lambda () (interactive)
-    (evil-open-below 1)
+  (lambda (&optional arg) (interactive "P")
+    (evil-open-below arg)
     (evil-normal-state)))
 
 (setq evil-ace-jump-active t)
@@ -311,10 +351,33 @@
 (define-key evil-motion-state-map (kbd "C-SPC") 'evil-ace-jump-char-mode)
 (define-key evil-motion-state-map (kbd "gl") 'evil-ace-jump-line-mode)
 
+;; Exit
+
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map  "dj" 'evil-normal-state)
 (key-chord-define evil-replace-state-map "dj" 'evil-normal-state)
 
+;;; Textobjects
+
+(define-key evil-inner-text-objects-map "B" 'evil-buffer)
+(define-key evil-outer-text-objects-map "B" 'evil-buffer)
+
+(evil-define-text-object evil-buffer (count &optional beg end type)
+  "Select entire buffer"
+  `(,(point-min) ,(point-max)))
+
+;; (define-key evil-inner-text-objects-map "f" 'evil-forward-inner-block)
+;; (define-key evil-outer-text-objects-map "f" 'evil-forward-outer-block)
+
+;; (evil-define-text-object evil-forward-inner-block (count &optional beg end type)
+;;   "Find block forward and select it."
+;;   (save-excursion `(,(+ 1 (goto-char (- (search-forward "(" nil nil count) 1)))
+;; 		    ,(- (forward-list 1) 1))))
+
+;; (evil-define-text-object evil-forward-outer-block (count &optional beg end type)
+;;   "Find block forward and select it."
+;;   (save-excursion `(,(goto-char (- (search-forward "(" nil nil count) 1))
+;; 		    ,(forward-list 1))))
 
 ;;;;;; Custom keybindings!
 
@@ -386,6 +449,7 @@ Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
  '(powerline-active3 ((t (:inherit mode-line :background "gray30" :foreground "white"))))
  '(powerline-inactive1 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
  '(powerline-inactive2 ((t (:inherit mode-line-inactive :background "grey10" :foreground "dim gray"))))
+ ;; '(region ((t (:background "black"))))
  '(shm-current-face ((t (:background "gray20"))) t)
  '(shm-quarantine-face ((t (:background "black"))) t)
  '(show-paren-match ((t (:background "gray20"))))
