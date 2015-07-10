@@ -180,13 +180,13 @@
 
 ;; Set up haskell-mode
 
-;; (eval-after-load "haskell-mode"
-;;   '(progn (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-;;           (add-hook 'haskell-mode-hook 'inf-haskell-mode)
-;;           (diminish 'haskell-indentation-mode)
-;;           (diminish 'inf-haskell-mode)))
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+(add-hook 'haskell-mode-hook 'inf-haskell-mode)
+(add-hook 'haskell-mode-hook 'hindent-mode)
 
-;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(eval-after-load "haskell-indentation" '(diminish 'haskell-indentation-mode))
+(eval-after-load "inf-haskell" '(diminish 'inf-haskell-mode))
+(eval-after-load "hindent" '(diminish 'hindent-mode))
 
 (add-hook 'flycheck-mode-hook 'flycheck-haskell-setup)
 
@@ -208,24 +208,24 @@
 
 ;; Magit
 
-(eval-after-load "magit"
-  '(progn
-     (define-key magit-status-mode-map "j" 'magit-goto-next-section)
-     (define-key magit-status-mode-map "k" 'magit-goto-previous-section)
-     (define-key magit-status-mode-map "n" 'magit-section-jump-map)
-     (define-key magit-status-mode-map "p" 'magit-discard-item)
-     (define-key magit-status-mode-map (kbd "C-k") 'magit-discard-item)
+;; (eval-after-load "magit"
+;;   '(progn
+;;      (define-key magit-status-mode-map "j" 'magit-section-forward)
+;;      (define-key magit-status-mode-map "k" 'magit-section-backward)
+;;      (define-key magit-status-mode-map "n" 'magit-section-jump-map)
+;;      (define-key magit-status-mode-map "p" 'magit-discard-item)
+;;      (define-key magit-status-mode-map (kbd "C-k") 'magit-discard-item)
 
-     (define-key magit-log-mode-map "j" 'magit-goto-next-section)
-     (define-key magit-log-mode-map "k" 'magit-goto-previous-section)
+;;      (define-key magit-log-mode-map "j" 'magit-section-forward)
+;;      (define-key magit-log-mode-map "k" 'magit-section-backward)
 
-     (define-key magit-commit-mode-map "j" 'magit-goto-next-section)
-     (define-key magit-commit-mode-map "k" 'magit-goto-previous-section)
-     (define-key magit-commit-mode-map "n" 'magit-jump-to-diffstats)
+;;      (define-key magit-commit-mode-map "j" 'magit-goto-next-section)
+;;      (define-key magit-commit-mode-map "k" 'magit-goto-previous-section)
+;;      (define-key magit-commit-mode-map "n" 'magit-jump-to-diffstats)
 
-     ;; (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
-     ;; (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
-     ))
+;;      (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
+;;      (add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
+;;      ))
 
 ;; ARFF mode definition for working with weka
 
