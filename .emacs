@@ -293,7 +293,7 @@
 (add-to-list 'evil-insert-state-modes 'inferior-haskell-mode)
 (add-to-list 'evil-insert-state-modes 'idris-repl-mode)
 (add-to-list 'evil-insert-state-modes 'tuareg-interactive-mode)
-(add-to-list 'evil-insert-state-modes 'git-commit-mode)
+(add-to-list 'evil-insert-state-modes 'with-editor-mode)
 
 ;; (delete 'ibuffer-mode evil-emacs-state-modes)
 ;; (evil-define-key 'normal ibuffer-mode-map
@@ -306,7 +306,7 @@
 
 ;; Flippping i and a
 
-;; (define-key evil-normal-state-map (kbd "s") 'evil-surround-edit)
+(define-key evil-normal-state-map (kbd "s") 'evil-surround-region)
 
 ;; (define-key evil-motion-state-map [S-iso-lefttab] 'evil-jump-backward)
 

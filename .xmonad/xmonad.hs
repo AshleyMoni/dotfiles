@@ -126,7 +126,7 @@ main = do
       -- Reapply transparency rules on any X events
       handleEventHook = fadeWindowsEventHook,
 
-      -- Construct new windows behind older ones
+      -- Placement rules for various windows
       manageHook = composeAll
                      [ className  =? "MPlayer"     --> doFloat
                      , className  =? "Gimp"        --> doFloat
@@ -140,7 +140,7 @@ main = do
                      , (className =? "Xchat"   <||>
                         className =? "Hexchat" <||>
                         title     =? "Friends")    --> doShift "chat"
-                     , className  =? "emacs"       --> doShift "code"
+                     , className  =? "Emacs"       --> doShift "code"
                      , title      =? "Steam"       --> doShift "ix"
                      , className  =? "Exaile"      --> doShift "x" ],
 
@@ -218,8 +218,8 @@ main = do
                    ++ "killall conky && "
                    ++ "killall dzen2 && "
                    ++ "xmonad --restart"),
-      -- ("M-S-q", safeSpawn "/usr/bin/systemctl" ["poweroff"]) ]
-      ("M-S-q", spawn "systemctl poweroff") ]
+      ("M-S-q", safeSpawn "/usr/bin/systemctl" ["poweroff"]) ]
+      -- ("M-S-q", spawn "systemctl poweroff") ]
 
     `additionalKeys`
 
