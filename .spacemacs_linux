@@ -31,6 +31,9 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     vimscript
+     javascript
+     go
      markdown
      yaml
      ;; ----------------------------------------------------------------
@@ -59,7 +62,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(protobuf-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -298,7 +301,10 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'all
+   dotspacemacs-whitespace-cleanup 'changed
+
+   ;; Custom: I want filenames in my modeline
+   dotspacemacs-frame-title-format "%f"
    ))
 
 (defun dotspacemacs/user-init ()
@@ -317,7 +323,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (server-start)
+  ;; (server-start)
 
   (spacemacs/toggle-mode-line-minor-modes)
 
@@ -326,10 +332,15 @@ you should place your code here."
 
                 echo-keystrokes 0.1
 
-                split-height-threshold nil
-                split-width-threshold 0)
+                js-indent-level 2)
 
-  (setq paradox-github-token "eb7024f20a8e8f0ce29758792ac1475e8ef6ce3c")
+  ;; Configure popwin so undo-tree and compilation pop to the right!
+  (push '(" *undo-tree*" :dedicated t :position right :stick t :noselect nil :width 60) popwin:special-display-config)
+  (push '("*compilation*" :dedicated t :position right :stick t :width 100) popwin:special-display-config)
+
+  ;; (setq undo-tree-auto-save-history t
+  ;;       undo-tree-history-director-alist '(("." . "~/.undo-tree/")))
+
   ;; (custom-set-variables
   ;;  '(tramp-default-method "plink")
   ;;  '(tramp-default-user "ashley")
@@ -345,14 +356,17 @@ you should place your code here."
   ;; Key chord stuff
   (setq-default evil-escape-key-sequence "dj"
                 evil-escape-unordered-key-sequence t
-                evil-cross-lines t)
+                evil-cross-lines t
+                truncate-lines t)
 
+  ;; Evil keybinds
   (define-key evil-normal-state-map (kbd "U") 'undo-tree-visualize)
   (define-key evil-motion-state-map (kbd "C-SPC") 'evil-avy-goto-word-or-subword-1)
   (define-key evil-motion-state-map (kbd "gl") 'evil-avy-goto-line)
+  (define-key evil-motion-state-map (kbd ";") 'evilnc-comment-operator)
 
-  (define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-down)
-  (define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-up)
+  (define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-page-down)
+  (define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-page-up)
 
   (define-key evil-normal-state-map (kbd "<S-return>")
     (lambda (&optional arg) (interactive "P")
@@ -364,6 +378,7 @@ you should place your code here."
       (evil-open-below arg)
       (evil-normal-state)))
 
+  ;; Global keybinds
   (global-set-key (kbd "C-0") 'delete-window)
   (global-set-key (kbd "C-1") 'delete-other-windows)
   (global-set-key (kbd "C-2") 'split-window-below)
@@ -373,7 +388,14 @@ you should place your code here."
   (global-set-key (kbd "C-6") '2C-command)
 
   (global-set-key [C-tab] 'other-window)
-  (global-set-key [C-S-tab] (lambda () (interactive) (other-window -1))))
+  (global-set-key (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
+
+  ;; Magit keybinds
+  (evil-define-key evil-magit-state magit-mode-map "j" 'magit-section-forward)
+  (evil-define-key evil-magit-state magit-mode-map "k" 'magit-section-backward)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'evil-next-visual-line)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'evil-previous-visual-line)
+  (evil-define-key evil-magit-state magit-mode-map [C-tab] 'other-window))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -384,11 +406,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (mmm-mode markdown-toc markdown-mode gh-md magit-popup git-commit ghub let-alist with-editor yaml-mode counsel-tramp docker-tramp kubernetes-tramp zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme ibuffer-projectile heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme nlinum-relative nlinum smeargle orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-filenotify key-chord ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy)))
- '(paradox-automatically-star t)
- '(tramp-default-host "192.168.56.101")
- '(tramp-default-method "plink")
- '(tramp-default-user "ashley"))
+    (vimrc-mode dactyl-mode go-projectile protobuf-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode go-guru go-eldoc go-mode mmm-mode markdown-toc markdown-mode gh-md magit-popup git-commit ghub let-alist with-editor yaml-mode counsel-tramp docker-tramp kubernetes-tramp zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme ibuffer-projectile heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme nlinum-relative nlinum smeargle orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-filenotify key-chord ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
