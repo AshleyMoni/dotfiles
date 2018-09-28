@@ -31,6 +31,8 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     html
+     python
      vimscript
      javascript
      go
@@ -323,12 +325,13 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  ;; (server-start)
+  (server-start)
 
   (spacemacs/toggle-mode-line-minor-modes)
 
   (setq-default scroll-margin 5
                 scroll-conservatively 101
+                powerline-default-separator 'slant
 
                 echo-keystrokes 0.1
 
@@ -358,6 +361,10 @@ you should place your code here."
                 evil-escape-unordered-key-sequence t
                 evil-cross-lines t
                 truncate-lines t)
+
+  ;; ;; Tramp stuff
+  ;; (setq-default tramp-default-method "ssh")
+  ;; (setq-default tramp-default-user "ashley")
 
   ;; Evil keybinds
   (define-key evil-normal-state-map (kbd "U") 'undo-tree-visualize)
@@ -391,11 +398,12 @@ you should place your code here."
   (global-set-key (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
 
   ;; Magit keybinds
-  (evil-define-key evil-magit-state magit-mode-map "j" 'magit-section-forward)
-  (evil-define-key evil-magit-state magit-mode-map "k" 'magit-section-backward)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'evil-next-visual-line)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'evil-previous-visual-line)
-  (evil-define-key evil-magit-state magit-mode-map [C-tab] 'other-window))
+  (with-eval-after-load 'magit
+    (evil-define-key evil-magit-state magit-mode-map "j" 'magit-section-forward)
+    (evil-define-key evil-magit-state magit-mode-map "k" 'magit-section-backward)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'evil-next-visual-line)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'evil-previous-visual-line)
+    (evil-define-key evil-magit-state magit-mode-map [C-tab] 'other-window)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
